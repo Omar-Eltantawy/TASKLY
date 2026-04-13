@@ -7,12 +7,7 @@ export default function Home() {
     <div className="flex flex-col flex-1 items-center text-display-lg justify-center bg-background ">
       <div>
         <Input label="Full name" type="text" placeholder="Enter name..." />
-        <Input
-          label="Full name"
-          type="text"
-          placeholder="Enter name..."
-          error={"not-valid"}
-        />
+        <Input label="Full name" type="text" placeholder="Enter name..." />
         <Button disabled={true} variant="primary">
           Primary action
         </Button>

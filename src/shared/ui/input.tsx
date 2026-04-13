@@ -3,8 +3,7 @@ import { FieldError } from "react-hook-form";
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
-  // error?: FieldError;
-  error?: string;
+  error?: FieldError;
 };
 
 export default function Input({
@@ -22,12 +21,12 @@ export default function Input({
         {label}
       </label>
       <input
-        type={props.type}
+        {...props}
         className={` outline-none text-sm font-normal px-4 py-3 rounded-sm
           ${error ? "bg-[#FFDAD6] text-error placeholder:text-error " : "bg-surface-highest text-[#6B7280]  placeholder:text-[#6B7280] "}
           ${className}`}
-        placeholder={error ? error : props.placeholder}
       />
+      {error && <p className="text-error text-xs mt-1">{error.message}</p>}
     </div>
   );
 }
