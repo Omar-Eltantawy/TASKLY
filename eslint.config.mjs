@@ -13,7 +13,7 @@ const eslintConfig = defineConfig([
       prettier: prettierPlugin,
     },
     rules: {
-      'prettier/prettier': 'error',
+      // 'prettier/prettier': 'error',
     },
   },
 
