@@ -1,4 +1,5 @@
 import Button from "@/shared/ui/button";
+import Icon from "@/shared/ui/icon";
 import Input from "@/shared/ui/input";
 
 export default function Home() {
@@ -17,6 +18,9 @@ export default function Home() {
         </Button>
         <Button variant="secondary">Secondary action</Button>
         <Button variant="ghost">ghost action</Button>
+        <br />
+
+        <Icon name="event" />
       </div>
     </div>
   );
