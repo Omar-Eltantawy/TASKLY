@@ -35,3 +35,7 @@ export type LoginPayload = {
 export type LoginSuccessResponse = SignupSuccessResponse;
 
 export type LoginAPIResponse = LoginSuccessResponse | ApiError;
+
+export type ForgotPasswordPayload = { email: string };
+
+export type ResetPasswordPayload = { password: string };

@@ -6,7 +6,9 @@ export default function Proxy(req: NextRequest) {
 
   const isAuthPage =
     req.nextUrl.pathname.startsWith("/login") ||
-    req.nextUrl.pathname.startsWith("/signup");
+    req.nextUrl.pathname.startsWith("/signup") ||
+    req.nextUrl.pathname.startsWith("/forgot-password") ||
+    req.nextUrl.pathname.startsWith("/reset-password");
 
   const isProtected =
     !isAuthPage && !req.nextUrl.pathname.startsWith("/api/auth/refresh");
