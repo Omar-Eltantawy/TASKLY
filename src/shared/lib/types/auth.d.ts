@@ -13,6 +13,7 @@ export type SignupSuccessResponse = {
   access_token: string;
   refresh_token: string;
   expires_in: number;
+  token_type: string;
   user: {
     id: string;
     email: string;
@@ -25,3 +26,12 @@ export type SignupSuccessResponse = {
 };
 
 export type SignupAPIResponse = SignupSuccessResponse | ApiError;
+
+export type LoginPayload = {
+  email: string;
+  password: string;
+};
+
+export type LoginSuccessResponse = SignupSuccessResponse;
+
+export type LoginAPIResponse = LoginSuccessResponse | ApiError;

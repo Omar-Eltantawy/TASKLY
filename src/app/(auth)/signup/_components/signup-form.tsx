@@ -107,6 +107,7 @@ export default function SignupForm() {
           name="Password"
           render={({ field }) => (
             <Input
+              type="password"
               label="Password"
               placeholder="Minimum 8 characters"
               error={form.formState.errors.Password}
@@ -120,6 +121,7 @@ export default function SignupForm() {
           name="ConfirmPassword"
           render={({ field }) => (
             <Input
+              type="password"
               label="Confirm password"
               placeholder="Repeat your password"
               error={form.formState.errors.ConfirmPassword}
