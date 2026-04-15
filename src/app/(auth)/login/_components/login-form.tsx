@@ -33,7 +33,7 @@ export default function LoginForm() {
       return;
     }
 
-    window.location.replace("/dashboard");
+    window.location.replace("/");
   };
   return (
     <form
