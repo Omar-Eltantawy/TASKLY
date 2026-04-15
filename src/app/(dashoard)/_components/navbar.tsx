@@ -3,14 +3,15 @@ import { User } from "@/shared/lib/types/user";
 import burgerIcon from "../../../../public/icons/burger.svg";
 import LogoIcon from "../../../../public/icons/logo.svg";
 import Image from "next/image";
+import { useAppSelector } from "@/store/hooks";
 type Props = {
   onMenuClick: () => void;
-  user: User | null;
 };
 
-export default function Navbar({ onMenuClick, user }: Props) {
-  const name = user?.name || "User";
-  const department = user?.department || "Department";
+export default function Navbar({ onMenuClick }: Props) {
+  //   const name = user?.name || "User";
+  //   const department = user?.department || "Department";
+  const useer = useAppSelector((state) => state.user.user);
 
   return (
     <header
@@ -33,10 +34,12 @@ export default function Navbar({ onMenuClick, user }: Props) {
 
       <div className="flex items-center gap-3 ml-auto font-bold">
         <div className="text-right hidden sm:block">
-          <p className="text-sm  text-gray-900 leading-tight">{name}</p>
-          <p className="text-[.65rem] text-primary uppercase">{department}</p>
+          <p className="text-sm  text-gray-900 leading-tight">{useer?.name}</p>
+          <p className="text-[.65rem] text-primary uppercase">
+            {useer?.department}
+          </p>
         </div>
-        <UserAvatar name={name} />
+        {useer && <UserAvatar name={useer.name} />}
       </div>
     </header>
   );
