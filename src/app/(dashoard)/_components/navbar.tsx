@@ -1,5 +1,4 @@
 import UserAvatar from "./user-avatar";
-import { User } from "@/shared/lib/types/user";
 import burgerIcon from "../../../../public/icons/burger.svg";
 import LogoIcon from "../../../../public/icons/logo.svg";
 import Image from "next/image";
@@ -9,8 +8,6 @@ type Props = {
 };
 
 export default function Navbar({ onMenuClick }: Props) {
-  //   const name = user?.name || "User";
-  //   const department = user?.department || "Department";
   const useer = useAppSelector((state) => state.user.user);
 
   return (
