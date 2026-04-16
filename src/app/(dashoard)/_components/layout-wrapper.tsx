@@ -17,7 +17,7 @@ export default function DashboardLayout({
 
       <div className="flex flex-1 min-h-0">
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-        <main className="flex-1 overflow-y-auto p-6 min-h-0">
+        <main className="flex-1 overflow-y-auto px-5 py-3 min-h-0">
           <Breadcrumbs />
           {children}
         </main>

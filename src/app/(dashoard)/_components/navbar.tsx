@@ -11,10 +11,7 @@ export default function Navbar({ onMenuClick }: Props) {
   const useer = useAppSelector((state) => state.user.user);
 
   return (
-    <header
-      className="h-16 flex items-center justify-between px-6 py-3
-      bg-white  top-0 z-30 w-full border-b border-[#0000001A]"
-    >
+    <header className="h-16 flex items-center justify-between px-6 py-3bg-white  top-0 z-30 w-full border-b border-[#0000001A]">
       <div className="flex items-center justify-between">
         <button
           onClick={onMenuClick}

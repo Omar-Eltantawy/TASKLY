@@ -17,8 +17,6 @@ export default function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
   const onSubmit: SubmitHandler<LoginFielsds> = async (values) => {
-    console.log(values);
-
     const payload = {
       email: values.Email,
       password: values.Password,

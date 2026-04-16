@@ -14,7 +14,7 @@ export default function Proxy(req: NextRequest) {
     !isAuthPage && !req.nextUrl.pathname.startsWith("/api/auth/refresh");
 
   if (accessToken && isAuthPage) {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
+    return NextResponse.redirect(new URL("/", req.url));
   }
 
   if (!accessToken && refreshToken && isProtected) {
