@@ -1,11 +1,16 @@
 "use server";
 
-import { ResetPasswordPayload } from "../types/auth";
+import { ApiError } from "../types/api";
+import {
+  LoginAPIResponse,
+  LoginSuccessResponse,
+  ResetPasswordPayload,
+} from "../types/auth";
 
 export async function resetPasswordAction(
   payload: ResetPasswordPayload,
   accessToken: string,
-): Promise<any> {
+): Promise<LoginAPIResponse> {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/auth/v1/user`,
@@ -20,14 +25,17 @@ export async function resetPasswordAction(
       },
     );
 
-    const data = await response.json();
+    const data: LoginSuccessResponse = await response.json();
+
+    console.log(data);
 
     if (!response.ok) {
-      return { success: false, error: data.msg ?? "Failed to reset password." };
+      return data;
     }
 
     return data;
   } catch (error) {
-    return error;
+    const err = error as ApiError;
+    return err;
   }
 }
