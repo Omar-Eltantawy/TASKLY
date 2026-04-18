@@ -1,4 +1,3 @@
-import { Project } from "@/shared/lib/types/project";
 import NoProject from "./no-project";
 import ProjectCard from "./project-card";
 import Link from "next/link";
@@ -8,9 +7,20 @@ import addProjectIcon from "../../../../public/icons/add-project.svg";
 import addProjectIcon2 from "../../../../public/icons/add.svg";
 import Image from "next/image";
 import Pagination from "@/shared/ui/pagination";
+import { getProjectsAction } from "@/shared/lib/actions/get-projects.action";
+import ProjectError from "./project-error";
+import { redirect } from "next/navigation";
 
-export default function ProjectsList({ projects }: { projects: Project[] }) {
-  if (projects.length === 0) {
+export default async function ProjectsList() {
+  const res = await getProjectsAction();
+  if (!res.success) {
+    if (res.status === 401) {
+      redirect("/login");
+    } else {
+      return <ProjectError />;
+    }
+  }
+  if (res.projects.length === 0) {
     return (
       <div className="flex flex-col justify-center items-center ">
         <NoProject />
@@ -18,7 +28,7 @@ export default function ProjectsList({ projects }: { projects: Project[] }) {
     );
   }
 
-  const visibleProjects = projects.slice(0, 5);
+  const visibleProjects = res.projects.slice(0, 5);
 
   return (
     <>

@@ -1,5 +1,7 @@
 "use client";
 
+import { cn } from "../lib/utils/tailwind-merge";
+
 type ButtonProps = {
   variant?: "primary" | "secondary" | "ghost";
   onClick?: () => void;
@@ -28,7 +30,11 @@ export default function Button({
 }: ButtonProps) {
   return (
     <button
-      className={`px-6 py-4 cursor-pointer bg-primary rounded-sm text-sm capitalize hover:scale-95 disabled:cursor-no-drop transition-all duration-300 ${styles[variant]} ${className} `}
+      className={cn(
+        "px-6 py-4 cursor-pointer bg-primary rounded-sm text-sm capitalize hover:scale-95 disabled:cursor-no-drop transition-all duration-300",
+        styles[variant],
+        className,
+      )}
       onClick={onClick}
       disabled={disabled}
       type={type}

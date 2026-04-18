@@ -1,5 +1,7 @@
 "use client";
 
+import { cn } from "@/shared/lib/utils/tailwind-merge";
+
 type PasswordRulesProps = {
   password: string;
 };
@@ -31,7 +33,10 @@ export default function PasswordRules({ password }: PasswordRulesProps) {
       {rules.map((rule, index) => (
         <div key={index} className="flex items-center gap-2 text-sm">
           <span
-            className={`w-4 h-4 flex items-center justify-center rounded-full text-xs font-bold ${rule.valid ? "border-2" : "border"} `}
+            className={cn(
+              "w-4 h-4 flex items-center justify-center rounded-full text-xs font-bold",
+              rule.valid ? "border-2" : "border",
+            )}
           >
             {rule.valid ? "✓" : ""}
           </span>

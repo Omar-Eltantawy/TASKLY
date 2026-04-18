@@ -78,9 +78,7 @@ export default function LoginForm() {
         />
         <Link
           href={"/forgot-password"}
-          className="text-primary text-xs font-semibold hover:underline transition-all
-          absolute right-0 top-1.5 -translate-y-1/2  inline-block md:hidden
-          "
+          className="text-primary text-xs font-semibold hover:underline transition-all absolute right-0 top-1.5 -translate-y-1/2  inline-block md:hidden"
         >
           Forgot?
         </Link>

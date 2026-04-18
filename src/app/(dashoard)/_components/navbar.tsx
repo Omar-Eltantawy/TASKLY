@@ -20,7 +20,7 @@ export default function Navbar({ onMenuClick }: Props) {
         >
           <Image src={burgerIcon} alt="Menu" width={20} height={20} />
         </button>
-        <span className={`hidden lg:flex items-center gap-2 ps-1.5`}>
+        <span className="hidden lg:flex items-center gap-2 ps-1.5">
           <Image src={LogoIcon} alt="Logo" width={20} height={20} />
           <span className="font-bold text-xl">TASKLY</span>
         </span>

@@ -1,3 +1,5 @@
+import { cn } from "../lib/utils/tailwind-merge";
+
 export default function Pagination() {
   const currentPage = 1;
   const totalPages = 2;
@@ -10,10 +12,7 @@ export default function Pagination() {
 
       <div className="flex items-center gap-1">
         {/* Prev */}
-        <button
-          className="h-7 w-7 text-xs rounded-sm border border-gray-200
-            text-slate-medium disabled:opacity-40 hover:bg-gray-50 transition-colors"
-        >
+        <button className="h-7 w-7 text-xs rounded-sm border border-gray-200 text-slate-medium disabled:opacity-40 hover:bg-gray-50 transition-colors">
           ←
         </button>
 
@@ -21,22 +20,19 @@ export default function Pagination() {
         {Array.from({ length: totalPages }).map((_, i) => (
           <button
             key={i}
-            className={`w-7 h-7 text-xs rounded-sm transition-colors
-              ${
-                i + 1 === currentPage
-                  ? "bg-primary text-white"
-                  : "border border-gray-200 text-slate-medium hover:bg-gray-50"
-              }`}
+            className={cn(
+              "w-7 h-7 text-xs rounded-sm transition-colors",
+              i + 1 === currentPage
+                ? "bg-primary text-white"
+                : "border border-gray-200 text-slate-medium hover:bg-gray-50",
+            )}
           >
             {i + 1}
           </button>
         ))}
 
         {/* Next */}
-        <button
-          className="h-7 w-7 text-xs rounded-sm border border-gray-200
-            text-slate-medium hover:bg-gray-50 transition-colors"
-        >
+        <button className="h-7 w-7 text-xs rounded-sm border border-gray-200 text-slate-medium hover:bg-gray-50 transition-colors">
           →
         </button>
       </div>

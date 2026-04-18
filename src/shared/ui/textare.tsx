@@ -1,3 +1,5 @@
+import { cn } from "../lib/utils/tailwind-merge";
+
 export default function Textarea({
   label,
   error,
@@ -13,8 +15,10 @@ export default function Textarea({
   return (
     <div className="flex flex-col mb-6">
       <label
-        className={`text-[.625rem] uppercase font-bold mb-1.5
-          ${error ? "text-error" : "text-[#737685]"}`}
+        className={cn(
+          "text-[.625rem] uppercase font-bold mb-1.5",
+          error ? "text-error" : "text-[#737685]",
+        )}
       >
         {label}
       </label>
@@ -22,12 +26,12 @@ export default function Textarea({
         {...props}
         maxLength={maxLength}
         rows={5}
-        className={`outline-none text-sm font-normal px-4 py-3 rounded-sm resize-none
-          ${
-            error
-              ? "bg-[#FFDAD6] text-error placeholder:text-error"
-              : "bg-surface-highest text-[#6B7280] placeholder:text-[#6B7280]"
-          }`}
+        className={cn(
+          "outline-none text-sm font-normal px-4 py-3 rounded-sm resize-none",
+          error
+            ? "bg-[#FFDAD6] text-error placeholder:text-error"
+            : "bg-surface-highest text-[#6B7280] placeholder:text-[#6B7280]",
+        )}
       />
       <div className="flex justify-between mt-1.5">
         {error?.message ? (

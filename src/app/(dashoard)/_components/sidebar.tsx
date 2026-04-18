@@ -7,6 +7,7 @@ import Image from "next/image";
 import { SIDEBARLINKS } from "./links";
 import ArrowIcon from "../../../../public/icons/colspan-arrow.svg";
 import LogoutArrowIcon from "../../../../public/icons/logout-arrow.svg";
+import { cn } from "@/shared/lib/utils/tailwind-merge";
 
 type Props = {
   isOpen: boolean;
@@ -44,13 +45,11 @@ export default function Sidebar({ isOpen, onClose }: Props) {
       )}
 
       <aside
-        className={`
-          fixed top-0 left-0 h-full z-50 bg-[#F1F3FF]  border-gray-800
-          flex flex-col transition-all duration-300
-          ${sidebarWidth}
-          ${isOpen ? "translate-x-0" : "-translate-x-full"}
-          lg:relative lg:translate-x-0 lg:z-auto
-        `}
+        className={cn(
+          "fixed top-0 left-0 h-full z-50 bg-[#F1F3FF]  border-gray-800 flex flex-col transition-all duration-300 lg:relative lg:translate-x-0 lg:z-auto",
+          sidebarWidth,
+          isOpen ? "translate-x-0" : "-translate-x-full",
+        )}
       >
         {/* Nav links */}
         <nav className="flex-1 py-4 px-2 flex flex-col gap-1 overflow-y-auto">
@@ -61,10 +60,11 @@ export default function Sidebar({ isOpen, onClose }: Props) {
                 key={link.href}
                 href={link.href}
                 onClick={onClose}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-md
-                  text-sm font-medium transition-colors
-                  ${collapsed ? "justify-center" : ""}
-                  ${isActive ? "bg-white text-primary" : "text-[#041B3C]"}`}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors",
+                  collapsed ? "justify-center" : "",
+                  isActive ? "bg-white text-primary" : "text-[#041B3C]",
+                )}
                 title={collapsed ? link.label : undefined}
               >
                 <span className="shrink-0">
@@ -83,24 +83,30 @@ export default function Sidebar({ isOpen, onClose }: Props) {
 
         <button
           onClick={() => setCollapsed((c) => !c)}
-          className={`hidden lg:flex items-center gap-2 px-3 py-4
-            border-t border-gray-100 text-slate-dark cursor-pointer
-            transition-colors text-sm font-medium
-            ${collapsed ? "justify-center" : ""}`}
+          className={cn(
+            "hidden lg:flex items-center gap-2 px-3 py-4 border-t border-gray-100 text-slate-dark cursor-pointer transition-colors text-sm font-medium",
+            collapsed ? "justify-center" : "",
+          )}
         >
           <Image
             src={ArrowIcon}
             alt="Collapse"
             width={10}
             height={10}
-            className={`transition-transform duration-300 ${collapsed ? "rotate-180" : ""}`}
+            className={cn(
+              "transition-transform duration-300",
+              collapsed ? "rotate-180" : "",
+            )}
           />
           {!collapsed && <span>Collapse</span>}
         </button>
         {/* Logout */}
 
         <button
-          className={`flex items-center gap-2 text-error p-3 text-sm cursor-pointer ${collapsed ? "justify-center" : ""}`}
+          className={cn(
+            "flex items-center gap-2 text-error p-3 text-sm cursor-pointer",
+            collapsed ? "justify-center" : "",
+          )}
         >
           <Image src={LogoutArrowIcon} alt="Logout" width={18} height={18} />
           {!collapsed && <span>Logout</span>}

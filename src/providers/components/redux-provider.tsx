@@ -3,7 +3,7 @@
 import { Provider } from "react-redux";
 import { store } from "@/store/store";
 import { useEffect } from "react";
-import { setUser } from "@/features/user/slice";
+import { setUser } from "@/store/features/user/slice";
 import { User } from "@/shared/lib/types/user";
 
 export default function ReduxProvider({

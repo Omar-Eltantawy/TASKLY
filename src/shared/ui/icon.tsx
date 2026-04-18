@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { cn } from "../lib/utils/tailwind-merge";
 
 type IconProps = {
   name: string;
@@ -15,7 +16,10 @@ export default function Icon({
 }: IconProps) {
   return (
     <div
-      className={`bg-surface-highest px-6 py-5 w-fit max-w-17.5 max-h-12 h-fit mt-10 flex items-center justify-center rounded-sm ${parentClassName}`}
+      className={cn(
+        "bg-surface-highest px-6 py-5 w-fit max-w-17.5 max-h-12 h-fit mt-10 flex items-center justify-center rounded-sm",
+        parentClassName,
+      )}
     >
       <Image
         src={`/icons/${name}.svg`}
