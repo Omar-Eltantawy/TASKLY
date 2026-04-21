@@ -18,7 +18,7 @@ export default function ProjectsList({ projects }: { projects: Project[] }) {
         ))}
 
         <Link
-          href="/add-new-project"
+          href="/project/add"
           className="rounded-lg p-4 bg-white shadow-xs w-76 h-55 hidden md:flex flex-col items-center justify-center"
         >
           <span className=" flex items-center justify-center text-sm font-medium bg-surface-low w-10 h-10 ">
@@ -32,7 +32,7 @@ export default function ProjectsList({ projects }: { projects: Project[] }) {
           Add New Project
         </Link>
         <Link
-          href="/add-new-project"
+          href="/project/add"
           className="flex items-center justify-center md:hidden bg-primary w-14 h-14  rounded-lg ms-auto"
         >
           <Image
