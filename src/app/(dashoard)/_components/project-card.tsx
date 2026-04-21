@@ -11,9 +11,13 @@ const formatDate = (date: string): string => {
 export default function ProjectCard({ project }: { project: Project }) {
   return (
     <div className="rounded-lg p-4 bg-white shadow-xs w-76 h-55 flex flex-col justify-between">
-      <h3 className="font-semibold text-lg text-slate-dark">{project.name}</h3>
+      <h3 className="font-semibold text-lg text-slate-dark max-w-full">
+        {project.name}
+      </h3>
 
-      <p className="text-sm text-[#434654] ">{project.description}</p>
+      <p className="text-sm text-[#434654]  max-w-full">
+        {project.description}
+      </p>
 
       <p className="text-sm font-medium text-[#434654] flex items-center justify-between ">
         <span className="text-[#737685] text-[11px] font-bold">CREATED AT</span>

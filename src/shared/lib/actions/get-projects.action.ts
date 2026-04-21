@@ -1,9 +1,13 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { GetProjectResponse } from "../types/project";
+import { GetProjectResponse, Project } from "../types/project";
 
-export async function getProjectsAction(): Promise<GetProjectResponse> {
+const LIMIT = 5;
+
+export async function getProjectsAction(
+  page: number = 1,
+): Promise<GetProjectResponse> {
   try {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("access_token")?.value;
@@ -12,16 +16,19 @@ export async function getProjectsAction(): Promise<GetProjectResponse> {
       return { success: false, error: "Not authenticated.", status: 401 };
     }
 
+    const offset = (page - 1) * LIMIT;
+
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/rest/v1/rpc/get_projects`,
+      `${process.env.NEXT_PUBLIC_API_URL}/rest/v1/rpc/get_projects?limit=${LIMIT}&offset=${offset}`,
       {
         method: "GET",
         headers: {
           apikey: process.env.NEXT_PUBLIC_API_KEY!,
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
+          Prefer: "count=exact",
         },
-        cache: "no-store",
+        cache: "force-cache",
       },
     );
 
@@ -36,9 +43,18 @@ export async function getProjectsAction(): Promise<GetProjectResponse> {
       };
     }
 
-    const data = await response.json();
+    const countRange = response.headers.get("content-range");
+    const totalCount = countRange ? parseInt(countRange.split("/")[1], 10) : 0;
 
-    return { success: true, projects: data };
+    const projects: Project[] = await response.json();
+
+    return {
+      success: true,
+      projects,
+      totalCount,
+      totalPages: Math.ceil(totalCount / LIMIT),
+      currentPage: page,
+    };
   } catch {
     return { success: false, error: "server_error" };
   }
