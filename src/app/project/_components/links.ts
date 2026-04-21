@@ -13,7 +13,7 @@ type SidebarLink = {
 export const SIDEBARLINKS: SidebarLink[] = [
   {
     label: "Projects",
-    href: "/",
+    href: "/project",
     icon: ProjectsIcon,
   },
   {

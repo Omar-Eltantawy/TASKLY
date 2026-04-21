@@ -31,7 +31,7 @@ export default function LoginForm() {
       return;
     }
 
-    window.location.replace("/");
+    window.location.replace("/project");
   };
   return (
     <form

@@ -1,4 +1,3 @@
-import NoProject from "./no-project";
 import ProjectCard from "./project-card";
 import Link from "next/link";
 
@@ -18,7 +17,7 @@ export default function ProjectsList({ projects }: { projects: Project[] }) {
         ))}
 
         <Link
-          href="/project/add"
+          href="/project/add-new-project"
           className="rounded-lg p-4 bg-white shadow-xs w-76 h-55 hidden md:flex flex-col items-center justify-center"
         >
           <span className=" flex items-center justify-center text-sm font-medium bg-surface-low w-10 h-10 ">
@@ -32,7 +31,7 @@ export default function ProjectsList({ projects }: { projects: Project[] }) {
           Add New Project
         </Link>
         <Link
-          href="/project/add"
+          href="/project/add-new-project"
           className="flex items-center justify-center md:hidden bg-primary w-14 h-14  rounded-lg ms-auto"
         >
           <Image
