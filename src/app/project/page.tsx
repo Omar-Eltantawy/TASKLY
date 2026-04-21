@@ -1,5 +1,4 @@
 import ProjectsContainer from "./_components/projects-container";
-import ProjectsList from "./_components/projects-list";
 
 export default function Home() {
   return (

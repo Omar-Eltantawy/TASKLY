@@ -4,36 +4,41 @@ import ProjectTaskIcon from "../../../../public/icons/project-tasks.svg";
 import MemberIcon from "../../../../public/icons/members.svg";
 import DetailsIcon from "../../../../public/icons/details.svg";
 
-type SidebarLink = {
+export type SidebarLink = {
   label: string;
   href: string;
   icon: string;
 };
 
-export const SIDEBARLINKS: SidebarLink[] = [
+export const GLOBAL_LINKS: SidebarLink[] = [
   {
     label: "Projects",
     href: "/project",
     icon: ProjectsIcon,
   },
-  {
-    label: "Project Ecips",
-    href: "/project-ecips",
-    icon: ProjectEpicsIcon,
-  },
-  {
-    label: "Project Tasks",
-    href: "/projects-tasks",
-    icon: ProjectTaskIcon,
-  },
-  {
-    label: "Project Members",
-    href: "/project-members",
-    icon: MemberIcon,
-  },
-  {
-    label: "Project Details",
-    href: "/project-details",
-    icon: DetailsIcon,
-  },
 ];
+
+export function getProjectLinks(projectId: string): SidebarLink[] {
+  return [
+    {
+      label: "Epics",
+      href: `/project/${projectId}/epics`,
+      icon: ProjectEpicsIcon,
+    },
+    {
+      label: "Tasks",
+      href: `/project/${projectId}/tasks`,
+      icon: ProjectTaskIcon,
+    },
+    {
+      label: "Members",
+      href: `/project/${projectId}/members`,
+      icon: MemberIcon,
+    },
+    {
+      label: "Details",
+      href: `/project/${projectId}/edit`,
+      icon: DetailsIcon,
+    },
+  ];
+}

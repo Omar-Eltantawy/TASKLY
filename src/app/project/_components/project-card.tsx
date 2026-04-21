@@ -1,4 +1,9 @@
+"use client";
+
 import { Project } from "@/shared/lib/types/project";
+import { setActiveProject } from "@/store/features/active-project/slice";
+import { useAppDispatch } from "@/store/hooks";
+import { useRouter } from "next/navigation";
 
 const formatDate = (date: string): string => {
   return new Date(date).toLocaleDateString("en-GB", {
@@ -9,8 +14,25 @@ const formatDate = (date: string): string => {
 };
 
 export default function ProjectCard({ project }: { project: Project }) {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
+  const handleClick = () => {
+    dispatch(
+      setActiveProject({
+        projectId: project.id,
+        projectName: project.name,
+      }),
+
+      router.push(`project/${project.id}/epics`),
+    );
+  };
+
   return (
-    <div className="rounded-lg p-4 bg-white shadow-xs w-76 h-55 flex flex-col justify-between">
+    <div
+      onClick={handleClick}
+      className="rounded-lg p-4 bg-white shadow-xs w-76 h-55 flex flex-col justify-between cursor-pointer hover:scale-105 hover:shadow-2xl transition-all"
+    >
       <h3 className="font-semibold text-lg text-slate-dark max-w-full">
         {project.name}
       </h3>
