@@ -20,7 +20,7 @@ export default function NoProject() {
       </div>
       <Button className="w-3/4">
         <Link
-          href="/project/add"
+          href="/project/add-new-project"
           className="flex items-center justify-center gap-3"
         >
           <Image src={AddIcon} alt="plus" width={16} height={16} />

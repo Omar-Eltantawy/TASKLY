@@ -1,5 +1,5 @@
-import React from "react";
+import EditFormContainer from "./_components/edit-form-container";
 
-export default function page() {
-  return <div>Active Project Edit</div>;
+export default async function EditProjectPage() {
+  return <EditFormContainer />;
 }

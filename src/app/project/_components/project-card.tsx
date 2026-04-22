@@ -22,6 +22,7 @@ export default function ProjectCard({ project }: { project: Project }) {
       setActiveProject({
         projectId: project.id,
         projectName: project.name,
+        projectDescription: project.description,
       }),
 
       router.push(`project/${project.id}/epics`),

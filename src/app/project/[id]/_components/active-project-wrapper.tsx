@@ -23,6 +23,7 @@ export default function ActiveProjectWrapper({
         setActiveProject({
           projectId: project.id,
           projectName: project.name,
+          projectDescription: project.description,
         }),
       );
     }
