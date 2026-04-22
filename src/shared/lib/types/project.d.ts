@@ -33,3 +33,16 @@ type ProjectsState = {
   loading: boolean;
   error: string | null;
 };
+
+export type ProjectMember = {
+  member_id: string;
+  project_id: string;
+  user_id: string;
+  role: "owner" | "admin" | "member" | "viewer";
+  email: string;
+  metadata: {
+    name: string;
+    email: string;
+    department: string;
+  };
+};
