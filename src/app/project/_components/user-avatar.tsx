@@ -8,18 +8,11 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/store/hooks";
 import { clearUser } from "@/store/features/user/slice";
 import { cn } from "@/shared/lib/utils/tailwind-merge";
+import { getNameInitials } from "@/shared/lib/utils/getNameInitial";
 
 type UserAvatarProps = {
   name: string;
   className?: string;
-};
-
-const getNameInitials = (name: string) => {
-  const parts = name.trim().split(" ").filter(Boolean);
-
-  if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
-
-  return (parts[0][0] + parts[1][0]).toUpperCase();
 };
 
 export default function UserAvatar({ name, className }: UserAvatarProps) {

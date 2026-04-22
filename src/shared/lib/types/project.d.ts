@@ -46,3 +46,7 @@ export type ProjectMember = {
     department: string;
   };
 };
+
+export type GetMembersResult =
+  | { success: true; data: ProjectMember[] }
+  | { success: false; error: string; status?: number };
