@@ -53,6 +53,7 @@ export default function LoginForm() {
         name="Email"
         render={({ field }) => (
           <Input
+            className="w-full"
             label="Email"
             placeholder="yourname@company.com"
             error={form.formState.errors.Email}
@@ -68,6 +69,7 @@ export default function LoginForm() {
           name="Password"
           render={({ field }) => (
             <Input
+              className="w-full"
               type="password"
               label="Password"
               placeholder="Minimum 8 characters"
