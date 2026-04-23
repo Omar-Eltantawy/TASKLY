@@ -4,7 +4,7 @@ import Image from "next/image";
 import { cn } from "@/shared/lib/utils/tailwind-merge";
 import { getNameInitials } from "@/shared/lib/utils/getNameInitial";
 
-const ROLE_STYLES: Record<ProjectMember["role"], string> = {
+export const ROLE_STYLES: Record<ProjectMember["role"], string> = {
   owner: "bg-primary text-white",
   admin: "bg-[#CDDDFF] text-[#51617E]",
   member: "bg-[#D7E2FF] text-[#434654]",

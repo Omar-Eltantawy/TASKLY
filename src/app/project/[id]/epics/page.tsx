@@ -3,6 +3,7 @@ import Image from "next/image";
 import addEpicIcon from "../../../../../public/icons/add.svg";
 import Input from "@/shared/ui/input";
 import Link from "next/link";
+import EpicsContainer from "./_components/epics-container";
 
 export default async function page({
   params,
@@ -12,7 +13,7 @@ export default async function page({
   const { id } = await params;
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <div className="flex items-center justify-between mb-5 shrink-0">
+      <div className="flex items-center justify-between shrink-0">
         <h1 className="hidden md:block text-[2.3rem] font-semibold">
           Project Epics
         </h1>
@@ -31,6 +32,7 @@ export default async function page({
           </Link>
         </div>
       </div>
+      <EpicsContainer projectId={id} />
     </div>
   );
 }

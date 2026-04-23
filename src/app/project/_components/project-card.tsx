@@ -5,7 +5,7 @@ import { setActiveProject } from "@/store/features/active-project/slice";
 import { useAppDispatch } from "@/store/hooks";
 import { useRouter } from "next/navigation";
 
-const formatDate = (date: string): string => {
+export const formatDate = (date: string): string => {
   return new Date(date).toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "short",

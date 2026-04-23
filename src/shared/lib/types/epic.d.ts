@@ -1,11 +1,19 @@
+export type EpicUser = {
+  sub: string;
+  name: string;
+  email: string;
+  department: string;
+};
+
 export type Epic = {
   id: string;
+  epic_id: string;
   title: string;
   description: string | null;
-  assignee_id: string | null;
-  project_id: string;
   deadline: string | null;
   created_at: string;
+  created_by: EpicUser;
+  assignee: EpicUser | null;
 };
 
 export type AddEpicPayload = {
@@ -19,3 +27,7 @@ export type AddEpicPayload = {
 export type AddEpicResult =
   | { success: true }
   | { success: false; error: string };
+
+export type GetEpicsResult =
+  | { success: true; data: Epic[] }
+  | { success: false; error: string; status?: number };
