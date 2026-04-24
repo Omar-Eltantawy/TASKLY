@@ -29,5 +29,11 @@ export type AddEpicResult =
   | { success: false; error: string };
 
 export type GetEpicsResult =
-  | { success: true; data: Epic[] }
+  | {
+      success: true;
+      epics: Epic[];
+      totalCount: number;
+      totalPages: number;
+      currentPage: number;
+    }
   | { success: false; error: string; status?: number };

@@ -1,10 +1,13 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { GetEpicsResult } from "../types/epic";
+import { Epic, GetEpicsResult } from "../types/epic";
+
+const LIMIT = 6;
 
 export async function getEpicsAction(
   projectId: string,
+  page: number = 1,
 ): Promise<GetEpicsResult> {
   try {
     const cookieStore = await cookies();
@@ -14,13 +17,15 @@ export async function getEpicsAction(
       return { success: false, error: "Not authenticated.", status: 401 };
     }
 
+    const offset = (page - 1) * LIMIT;
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/rest/v1/project_epics?project_id=eq.${projectId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/rest/v1/project_epics?project_id=eq.${projectId}&limit=${LIMIT}&offset=${offset}`,
       {
         headers: {
           "Content-Type": "application/json",
           apikey: process.env.NEXT_PUBLIC_API_KEY!,
           Authorization: `Bearer ${accessToken}`,
+          Prefer: "count=exact",
         },
         cache: "no-store",
       },
@@ -38,8 +43,17 @@ export async function getEpicsAction(
       };
     }
 
-    const data = await response.json();
-    return { success: true, data };
+    const countRange = response.headers.get("content-range");
+    const totalCount = countRange ? parseInt(countRange.split("/")[1], 10) : 0;
+    const epics: Epic[] = await response.json();
+
+    return {
+      success: true,
+      epics,
+      totalCount,
+      totalPages: Math.ceil(totalCount / LIMIT),
+      currentPage: page,
+    };
   } catch {
     return { success: false, error: "Network error. Please try again." };
   }

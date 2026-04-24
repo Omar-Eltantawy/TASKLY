@@ -4,23 +4,32 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 type EpicsState = {
   epics: Epic[];
+  currentPage: number;
+  totalPages: number;
+  totalCount: number;
   loading: boolean;
   error: string | null;
 };
 
 const initialState: EpicsState = {
   epics: [],
+  currentPage: 1,
+  totalPages: 1,
+  totalCount: 0,
   loading: false,
   error: null,
 };
 
 export const fetchEpics = createAsyncThunk(
   "epics/fetchEpics",
-  async (projectId: string, { rejectWithValue }) => {
-    const result = await getEpicsAction(projectId);
+  async (
+    { projectId, page }: { projectId: string; page: number },
+    { rejectWithValue },
+  ) => {
+    const result = await getEpicsAction(projectId, page);
     if (!result.success) return rejectWithValue(result);
 
-    return result.data;
+    return result;
   },
 );
 
@@ -36,7 +45,10 @@ const epicsSlice = createSlice({
       })
       .addCase(fetchEpics.fulfilled, (state, action) => {
         state.loading = false;
-        state.epics = action.payload;
+        state.epics = action.payload.epics;
+        state.currentPage = action.payload.currentPage;
+        state.totalPages = action.payload.totalPages;
+        state.totalCount = action.payload.totalCount;
       })
       .addCase(fetchEpics.rejected, (state, action) => {
         state.loading = false;

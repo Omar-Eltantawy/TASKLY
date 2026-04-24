@@ -10,16 +10,19 @@ import NoEpics from "./no-epics";
 import Image from "next/image";
 import Button from "@/shared/ui/button";
 import addEpicIcon from "../../../../../../public/icons/add.svg";
+import Pagination from "@/shared/ui/pagination";
 
 export default function EpicsContainer({ projectId }: { projectId: string }) {
   const dispatch = useAppDispatch();
-  const { epics, loading, error } = useAppSelector((state) => state.epics);
+  const { epics, loading, error, currentPage, totalPages } = useAppSelector(
+    (state) => state.epics,
+  );
 
   useEffect(() => {
     if (!projectId) return;
 
-    dispatch(fetchEpics(projectId));
-  }, [projectId, dispatch]);
+    dispatch(fetchEpics({ projectId, page: currentPage }));
+  }, [projectId, currentPage, dispatch]);
 
   if (error) return <ProjectError />;
 
@@ -37,6 +40,16 @@ export default function EpicsContainer({ projectId }: { projectId: string }) {
           <Image src={addEpicIcon} alt="add epic" width={20} height={20} />
         </Button>
       </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={(page) => {
+          console.log(page);
+
+          dispatch(fetchEpics({ projectId, page }));
+        }}
+        disabled={loading}
+      />
     </>
   );
 }
