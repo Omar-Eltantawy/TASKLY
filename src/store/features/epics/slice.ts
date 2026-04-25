@@ -1,3 +1,4 @@
+import { getEpicDetailAction } from "@/shared/lib/actions/get-epic-details.ction";
 import { getEpicsAction } from "@/shared/lib/actions/get-epics.action";
 import { Epic } from "@/shared/lib/types/epic";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -9,6 +10,9 @@ type EpicsState = {
   totalCount: number;
   loading: boolean;
   error: string | null;
+  selectedEpic: Epic | null;
+  detailLoading: boolean;
+  detailError: string | null;
 };
 
 const initialState: EpicsState = {
@@ -18,6 +22,9 @@ const initialState: EpicsState = {
   totalCount: 0,
   loading: false,
   error: null,
+  selectedEpic: null,
+  detailLoading: false,
+  detailError: null,
 };
 
 export const fetchEpics = createAsyncThunk(
@@ -33,10 +40,27 @@ export const fetchEpics = createAsyncThunk(
   },
 );
 
+export const fetchEpicDetails = createAsyncThunk(
+  "epics/fetchEpicDetail",
+  async (
+    { projectId, epicId }: { projectId: string; epicId: string },
+    { rejectWithValue },
+  ) => {
+    const result = await getEpicDetailAction(projectId, epicId);
+    if (!result.success) return rejectWithValue(result);
+    return result.data;
+  },
+);
+
 const epicsSlice = createSlice({
   name: "epics",
   initialState,
-  reducers: {},
+  reducers: {
+    clearSelectedEpic: (state) => {
+      state.selectedEpic = null;
+      state.detailError = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchEpics.pending, (state) => {
@@ -55,6 +79,25 @@ const epicsSlice = createSlice({
         const payload = action.payload as { error: string } | undefined;
         state.error = payload?.error ?? "Failed to load epics.";
       });
+
+    // Fetch Fetch Epic Details
+    builder
+      .addCase(fetchEpicDetails.pending, (state) => {
+        state.detailLoading = true;
+        state.detailError = null;
+        state.selectedEpic = null;
+      })
+      .addCase(fetchEpicDetails.fulfilled, (state, action) => {
+        state.detailLoading = false;
+        state.selectedEpic = action.payload;
+      })
+      .addCase(fetchEpicDetails.rejected, (state, action) => {
+        state.detailLoading = false;
+        const payload = action.payload as { error: string } | undefined;
+        state.detailError = payload?.error ?? "Failed to load epic details.";
+      });
   },
 });
+
+export const { clearSelectedEpic } = epicsSlice.actions;
 export default epicsSlice.reducer;

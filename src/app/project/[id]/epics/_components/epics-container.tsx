@@ -1,8 +1,12 @@
 "use client";
 
-import { fetchEpics } from "@/store/features/epics/slice";
+import {
+  clearSelectedEpic,
+  fetchEpicDetails,
+  fetchEpics,
+} from "@/store/features/epics/slice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import EpicCard from "./epic-card";
 import EpicCardSkeleton from "./epic-card-skeleton";
 import ProjectError from "@/app/project/_components/project-error";
@@ -11,18 +15,37 @@ import Image from "next/image";
 import Button from "@/shared/ui/button";
 import addEpicIcon from "../../../../../../public/icons/add.svg";
 import Pagination from "@/shared/ui/pagination";
+import EpicModal from "./epic-modal";
 
 export default function EpicsContainer({ projectId }: { projectId: string }) {
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const dispatch = useAppDispatch();
-  const { epics, loading, error, currentPage, totalPages } = useAppSelector(
-    (state) => state.epics,
-  );
+  const {
+    epics,
+    loading,
+    error,
+    currentPage,
+    totalPages,
+    selectedEpic,
+    detailError,
+    detailLoading,
+  } = useAppSelector((state) => state.epics);
 
   useEffect(() => {
     if (!projectId) return;
 
     dispatch(fetchEpics({ projectId, page: currentPage }));
   }, [projectId, currentPage, dispatch]);
+
+  const handleShowModal = async (epicId: string) => {
+    setIsOpenModal(true);
+    dispatch(fetchEpicDetails({ projectId, epicId }));
+  };
+
+  const handleCloseModal = () => {
+    setIsOpenModal(false);
+    dispatch(clearSelectedEpic());
+  };
 
   if (error) return <ProjectError />;
 
@@ -35,7 +58,13 @@ export default function EpicsContainer({ projectId }: { projectId: string }) {
 
         {!loading &&
           epics?.length > 0 &&
-          epics.map((epic) => <EpicCard key={epic.id} epic={epic} />)}
+          epics.map((epic) => (
+            <EpicCard
+              onClick={() => handleShowModal(epic.id)}
+              key={epic.id}
+              epic={epic}
+            />
+          ))}
         <Button className="w-10 h-10 ms-auto p-0 flex md:hidden items-center justify-center mt-10">
           <Image src={addEpicIcon} alt="add epic" width={20} height={20} />
         </Button>
@@ -50,6 +79,14 @@ export default function EpicsContainer({ projectId }: { projectId: string }) {
         }}
         disabled={loading}
       />
+      {isOpenModal && (
+        <EpicModal
+          epic={selectedEpic}
+          loading={detailLoading}
+          error={detailError}
+          onClose={handleCloseModal}
+        />
+      )}
     </>
   );
 }

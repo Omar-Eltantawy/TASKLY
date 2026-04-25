@@ -10,12 +10,19 @@ import { getNameInitials } from "@/shared/lib/utils/getNameInitial";
 import { formatDate } from "@/app/project/_components/project-card";
 import { cn } from "@/shared/lib/utils/tailwind-merge";
 
-export default function EpicCard({ epic }: { epic: Epic }) {
+export default function EpicCard({
+  epic,
+  onClick,
+}: {
+  epic: Epic;
+  onClick: () => void;
+}) {
   const [isDone, setIsDone] = useState(false);
 
   return (
     <div
-      onClick={() => setIsDone((prev) => !prev)}
+      onClick={onClick}
+      //  setIsDone((prev) => !prev)
       className={cn(
         "shadow-xl rounded-md cursor-pointer transition-all duration-200 p-4 sm:p-5",
         isDone ? "bg-[#E0E8FF]" : "bg-white border-l-4 border-[#004E32]",
@@ -42,7 +49,7 @@ export default function EpicCard({ epic }: { epic: Epic }) {
 
       {/* Assignee + Status */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-surface-highest py-4 sm:py-5">
-        {epic.assignee?.name && (
+        {epic.assignee?.name ? (
           <div className="flex items-center gap-2">
             <span
               className={cn(
@@ -60,11 +67,13 @@ export default function EpicCard({ epic }: { epic: Epic }) {
               <span className="text-[10px] sm:text-xs text-slate-medium">
                 Assignee
               </span>
-              <span className="text-xs sm:text-sm font-semibold text-slate-dark truncate max-w-[120px] sm:max-w-none">
+              <span className="text-xs sm:text-sm font-semibold text-slate-dark truncate max-w-30 sm:max-w-none">
                 {epic.assignee.name}
               </span>
             </span>
           </div>
+        ) : (
+          <p className="text-sm text-slate-medium font-bold">Unassigned</p>
         )}
 
         {/* Status */}
