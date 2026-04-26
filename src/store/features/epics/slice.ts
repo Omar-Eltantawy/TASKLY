@@ -1,7 +1,7 @@
 import { getEpicDetailAction } from "@/shared/lib/actions/get-epic-details.ction";
 import { getEpicsAction } from "@/shared/lib/actions/get-epics.action";
 import { Epic } from "@/shared/lib/types/epic";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type EpicsState = {
   epics: Epic[];
@@ -60,6 +60,20 @@ const epicsSlice = createSlice({
       state.selectedEpic = null;
       state.detailError = null;
     },
+    updateEpicDetails: (
+      state,
+      action: PayloadAction<{ epicId: string; changes: Partial<Epic> }>,
+    ) => {
+      const { epicId, changes } = action.payload;
+      const index = state.epics.findIndex((e) => e.id === epicId);
+
+      if (index !== -1) {
+        state.epics[index] = { ...state.epics[index], ...changes };
+      }
+      if (state?.selectedEpic?.id == epicId) {
+        state.selectedEpic = { ...state.selectedEpic, ...changes };
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -99,5 +113,5 @@ const epicsSlice = createSlice({
   },
 });
 
-export const { clearSelectedEpic } = epicsSlice.actions;
+export const { clearSelectedEpic, updateEpicDetails } = epicsSlice.actions;
 export default epicsSlice.reducer;

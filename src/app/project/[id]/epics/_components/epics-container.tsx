@@ -79,7 +79,7 @@ export default function EpicsContainer({ projectId }: { projectId: string }) {
         }}
         disabled={loading}
       />
-      {isOpenModal && (
+      {isOpenModal && selectedEpic && (
         <EpicModal
           epic={selectedEpic}
           loading={detailLoading}

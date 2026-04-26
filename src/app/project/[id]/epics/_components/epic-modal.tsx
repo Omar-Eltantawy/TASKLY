@@ -1,3 +1,4 @@
+"use client";
 import { formatDate } from "@/app/project/_components/project-card";
 import { Epic } from "@/shared/lib/types/epic";
 import Button from "@/shared/ui/button";
@@ -8,6 +9,7 @@ import ListIcon from "../../../../../../public/icons/list.svg";
 import Image from "next/image";
 import { cn } from "@/shared/lib/utils/tailwind-merge";
 import { getNameInitials } from "@/shared/lib/utils/getNameInitial";
+import { useState } from "react";
 
 type Props = {
   epic: Epic | null;
@@ -17,6 +19,11 @@ type Props = {
 };
 
 export default function EpicModal({ epic, loading, error, onClose }: Props) {
+  const [title, setTitle] = useState(epic?.title ?? "");
+  const [description, setDescription] = useState(epic?.description ?? "");
+  const [assigneeId, setAssigneeId] = useState(epic?.assignee?.sub ?? "");
+  const [deadline, setDeadline] = useState(epic?.deadline ?? "");
+
   return (
     <>
       <div
@@ -64,16 +71,24 @@ export default function EpicModal({ epic, loading, error, onClose }: Props) {
                     />
                     {epic.epic_id}
                   </span>
-                  <h2 className="text-xl font-semibold text-gray-900 mt-2">
+                  {/* <h2 className="text-xl font-semibold text-gray-900 mt-2">
                     {epic.title}
-                  </h2>
+                  </h2> */}
+                  <input
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="mt-2 w-full text-xl font-semibold text-gray-900
+                      outline-none border-b-2 border-transparent
+                      focus:border-primary bg-transparent transition-colors
+                      disabled:opacity-60"
+                  />
                 </div>
 
                 {/* Close button */}
                 <Button
                   variant="secondary"
                   onClick={onClose}
-                  className="p-1.5 rounded-md hover:bg-gray-100 transition-colors shrink-0"
+                  className="p-1.5 rounded-md hover:bg-gray-100 transition-all shrink-0"
                 >
                   x
                 </Button>
@@ -82,9 +97,20 @@ export default function EpicModal({ epic, loading, error, onClose }: Props) {
               {/* Body */}
               <div className="p-6 flex flex-col gap-6">
                 {/* Description */}
-                <p className="text-sm text-gray-700 leading-relaxed">
+                {/* <p className="text-sm text-gray-700 leading-relaxed">
                   {epic.description ?? "No description provided."}
-                </p>
+                </p> */}
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  rows={3}
+                  placeholder="No description provided."
+                  className="w-full text-sm text-gray-700 leading-relaxed
+                      outline-none border border-transparent rounded-sm px-2 py-1.5
+                      focus:border-primary bg-transparent hover:bg-gray-50
+                      focus:bg-white transition-colors resize-none
+                      placeholder:text-slate-medium disabled:opacity-60"
+                />
 
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-14  ">
                   {/* Created By */}
