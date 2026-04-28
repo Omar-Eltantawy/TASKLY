@@ -16,6 +16,7 @@ import Button from "@/shared/ui/button";
 import addEpicIcon from "../../../../../../public/icons/add.svg";
 import Pagination from "@/shared/ui/pagination";
 import EpicModal from "./epic-modal";
+import { fetchProjectMembers } from "@/store/features/active-project/slice";
 
 export default function EpicsContainer({ projectId }: { projectId: string }) {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
@@ -30,11 +31,13 @@ export default function EpicsContainer({ projectId }: { projectId: string }) {
     detailError,
     detailLoading,
   } = useAppSelector((state) => state.epics);
+  const members = useAppSelector((state) => state.activeProject.members);
 
   useEffect(() => {
     if (!projectId) return;
 
     dispatch(fetchEpics({ projectId, page: currentPage }));
+    dispatch(fetchProjectMembers(projectId));
   }, [projectId, currentPage, dispatch]);
 
   const handleShowModal = async (epicId: string) => {
@@ -79,9 +82,10 @@ export default function EpicsContainer({ projectId }: { projectId: string }) {
         }}
         disabled={loading}
       />
-      {isOpenModal && (
+      {isOpenModal && selectedEpic && (
         <EpicModal
           epic={selectedEpic}
+          members={members}
           loading={detailLoading}
           error={detailError}
           onClose={handleCloseModal}
