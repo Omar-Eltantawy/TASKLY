@@ -3,11 +3,10 @@ import { Epic } from "@/shared/lib/types/epic";
 import Button from "@/shared/ui/button";
 import EpicIdIcon from "../../../../../../public/icons/epic-id.svg";
 import DateIcon from "../../../../../../public/icons/calender.svg";
-import AddIcon from "../../../../../../public/icons/add-tasks.svg";
-import ListIcon from "../../../../../../public/icons/list.svg";
 import Image from "next/image";
 import { cn } from "@/shared/lib/utils/tailwind-merge";
 import { getNameInitials } from "@/shared/lib/utils/getNameInitial";
+import EpicTasks from "./epic-tasks";
 
 type Props = {
   epic: Epic | null;
@@ -153,7 +152,7 @@ export default function EpicModal({ epic, loading, error, onClose }: Props) {
                 </div>
 
                 {/* Epic Tasks — empty state */}
-                <div>
+                {/* <div>
                   <div className="flex items-center justify-between">
                     <p className="text-lg  font-bold text-slate-dark mb-3 mt-5">
                       Tasks
@@ -185,7 +184,8 @@ export default function EpicModal({ epic, loading, error, onClose }: Props) {
                     </p>
                     <Button className="text-sm">+ Add Task</Button>
                   </div>
-                </div>
+                </div> */}
+                <EpicTasks epic={epic} />
               </div>
             </>
           )}

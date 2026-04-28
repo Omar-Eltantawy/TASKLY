@@ -5,13 +5,21 @@ export type TaskStatus = (typeof TASK_STATUSES)[number];
 export type Task = {
   id: string;
   project_id: string;
-  epic_id: string | null;
+  epic_id: string;
+  task_id: string;
   title: string;
-  description: string | null;
-  assignee_id: string | null;
-  due_date: string | null;
+  description: string;
   status: TaskStatus;
+  due_date: string;
   created_at: string;
+  assignee: {
+    department: string;
+    email: string;
+    id: string;
+    name: string;
+  };
+  created_by: User;
+  epic: Epic;
 };
 
 export type AddTaskPayload = {
@@ -26,4 +34,8 @@ export type AddTaskPayload = {
 
 export type AddTaskResult =
   | { success: true }
+  | { success: false; error: string };
+
+export type GetEpicTasksResult =
+  | { success: true; tasks: Task[] }
   | { success: false; error: string };
