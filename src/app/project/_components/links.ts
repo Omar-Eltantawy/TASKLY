@@ -27,7 +27,7 @@ export function getProjectLinks(projectId: string): SidebarLink[] {
     },
     {
       label: "Tasks",
-      href: `/project/${projectId}/tasks`,
+      href: `/project/${projectId}/tasks?view=board`,
       icon: ProjectTaskIcon,
     },
     {

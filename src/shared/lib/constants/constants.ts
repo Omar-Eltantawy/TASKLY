@@ -21,3 +21,38 @@ export const STATUS_LABELS: Record<TaskStatus, string> = {
   READY_FOR_PRODUCTION: "Ready For Production",
   DONE: "Done",
 };
+
+export const COLUMN_COLORS: Record<TaskStatus, { bg: string; text: string }> = {
+  TO_DO: {
+    bg: "bg-gray-400",
+    text: "text-gray-900",
+  },
+  IN_PROGRESS: {
+    bg: "bg-primary-container",
+    text: "text-white",
+  },
+  BLOCKED: {
+    bg: "bg-error",
+    text: "text-white",
+  },
+  IN_REVIEW: {
+    bg: "bg-yellow-500",
+    text: "text-gray-900",
+  },
+  READY_FOR_QA: {
+    bg: "bg-purple-500",
+    text: "text-white",
+  },
+  REOPENED: {
+    bg: "bg-orange-500",
+    text: "text-white",
+  },
+  READY_FOR_PRODUCTION: {
+    bg: "bg-green-500",
+    text: "text-white",
+  },
+  DONE: {
+    bg: "bg-emerald-600",
+    text: "text-white",
+  },
+};

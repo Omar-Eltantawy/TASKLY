@@ -2,16 +2,17 @@ import ProjectError from "@/app/project/_components/project-error";
 import { getEpicsAction } from "@/shared/lib/actions/get-epics.action";
 import { getProjectMembersAction } from "@/shared/lib/actions/get-project-members.action";
 import AddTaskForm from "./_components/add-task-form";
+import { TaskStatus } from "@/shared/lib/types/task";
 
 export default async function page({
   params,
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ epicId?: string }>;
+  searchParams: Promise<{ epicId?: string; status?: TaskStatus }>;
 }) {
   const projectId = (await params).id;
-  const { epicId } = await searchParams;
+  const { epicId, status } = await searchParams;
 
   const [epicsResult, membersResult] = await Promise.all([
     getEpicsAction(projectId),
@@ -37,6 +38,7 @@ export default async function page({
           epics={epics}
           members={members}
           defaultEpicId={epicId}
+          defaultStatus={status}
         />
       </div>
     </div>

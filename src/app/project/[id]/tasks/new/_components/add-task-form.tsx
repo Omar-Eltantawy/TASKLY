@@ -14,12 +14,14 @@ import { Toast } from "@/shared/ui/toast";
 import { AddTaskFields, addTaskSchema } from "@/shared/lib/schemes/task.schema";
 import { addNewTaskAction } from "@/shared/lib/actions/add-new-task.action";
 import { STATUS_LABELS, TASK_STATUSES } from "@/shared/lib/constants/constants";
+import { TaskStatus } from "@/shared/lib/types/task";
 
 type Props = {
   projectId: string;
   epics: Epic[];
   members: ProjectMember[];
   defaultEpicId?: string;
+  defaultStatus?: TaskStatus;
 };
 
 export default function AddTaskForm({
@@ -27,6 +29,7 @@ export default function AddTaskForm({
   epics,
   members,
   defaultEpicId,
+  defaultStatus,
 }: Props) {
   const router = useRouter();
 
@@ -47,7 +50,7 @@ export default function AddTaskForm({
       epic_id: defaultEpicId,
       assignee_id: "",
       due_date: "",
-      status: "TO_DO",
+      status: defaultStatus,
     },
     resolver: zodResolver(addTaskSchema),
   });
@@ -72,7 +75,10 @@ export default function AddTaskForm({
 
     form.reset();
     showToast("Task created successfully.", "success");
-    setTimeout(() => router.push(`/project/${projectId}/tasks`), 1500);
+    setTimeout(
+      () => router.push(`/project/${projectId}/tasks?view=board`),
+      1500,
+    );
   };
 
   return (
