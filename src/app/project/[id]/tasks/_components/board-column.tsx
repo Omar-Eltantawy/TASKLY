@@ -1,5 +1,4 @@
 "use client";
-import { getTasksByStatusAction } from "@/shared/lib/actions/gat-tasks-by-status.actiom";
 import { Task, TaskStatus } from "@/shared/lib/types/task";
 import { useEffect, useState } from "react";
 import BoardColumnSkeleton from "./board-column-skeleton";
@@ -7,6 +6,7 @@ import BoardTaskCard from "./board-task-card";
 import { cn } from "@/shared/lib/utils/tailwind-merge";
 import Link from "next/link";
 import { COLUMN_COLORS } from "@/shared/lib/constants/constants";
+import { getTasksAction } from "@/shared/lib/actions/gat-tasks-by-status.actiom";
 
 type Props = {
   projectId: string;
@@ -22,7 +22,7 @@ export default function BoardColumn({ projectId, status, label }: Props) {
   useEffect(() => {
     const fetchTasks = async () => {
       setLoading(true);
-      const result = await getTasksByStatusAction(projectId, status);
+      const result = await getTasksAction(projectId, status);
       if (!result.success) {
         setLoading(false);
         setError(result.error);

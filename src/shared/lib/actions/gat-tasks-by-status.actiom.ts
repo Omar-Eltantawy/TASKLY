@@ -3,9 +3,9 @@
 import { cookies } from "next/headers";
 import { GetEpicTasksResult } from "../types/task";
 
-export async function getTasksByStatusAction(
+export async function getTasksAction(
   projectId: string,
-  status: string,
+  status?: string,
 ): Promise<GetEpicTasksResult> {
   try {
     const cookieStore = await cookies();
@@ -15,17 +15,20 @@ export async function getTasksByStatusAction(
       return { success: false, error: "Not authenticated." };
     }
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/rest/v1/project_tasks?project_id=eq.${projectId}&status=eq.${status}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          apikey: process.env.NEXT_PUBLIC_API_KEY!,
-          Authorization: `Bearer ${accessToken}`,
-        },
-        cache: "no-store",
+    let url = `${process.env.NEXT_PUBLIC_API_URL}/rest/v1/project_tasks?project_id=eq.${projectId}`;
+
+    if (status) {
+      url += `&status=eq.${status}`;
+    }
+
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        apikey: process.env.NEXT_PUBLIC_API_KEY!,
+        Authorization: `Bearer ${accessToken}`,
       },
-    );
+      cache: "no-store",
+    });
 
     if (!response.ok) {
       const data = await response.json();
