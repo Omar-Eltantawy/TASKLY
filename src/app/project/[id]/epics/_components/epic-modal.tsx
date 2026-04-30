@@ -1,27 +1,135 @@
 "use client";
-import { formatDate } from "@/app/project/_components/project-card";
-import { Epic } from "@/shared/lib/types/epic";
+import { Epic, EpicUser } from "@/shared/lib/types/epic";
 import Button from "@/shared/ui/button";
 import EpicIdIcon from "../../../../../../public/icons/epic-id.svg";
-import DateIcon from "../../../../../../public/icons/calender.svg";
 import Image from "next/image";
 import { cn } from "@/shared/lib/utils/tailwind-merge";
 import { getNameInitials } from "@/shared/lib/utils/getNameInitial";
 import EpicTasks from "./epic-tasks";
 import { useState } from "react";
+import { updateEpicAction } from "@/shared/lib/actions/update-epic.action";
+import { useAppDispatch } from "@/store/hooks";
+import { updateEpicDetails } from "@/store/features/epics/slice";
+import { Toast } from "@/shared/ui/toast";
+import { ProjectMember } from "@/shared/lib/types/project";
 
 type Props = {
   epic: Epic | null;
+  members: ProjectMember[];
   loading: boolean;
   error: string | null;
   onClose: () => void;
 };
 
-export default function EpicModal({ epic, loading, error, onClose }: Props) {
+const today = new Date().toISOString().split("T")[0];
+console.log(today);
+
+export default function EpicModal({
+  epic,
+  loading,
+  error,
+  onClose,
+  members,
+}: Props) {
+  const dispatch = useAppDispatch();
+  console.log(members);
+
+  const [saving, setSaving] = useState(false);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
   const [title, setTitle] = useState(epic?.title ?? "");
   const [description, setDescription] = useState(epic?.description ?? "");
   const [assigneeId, setAssigneeId] = useState(epic?.assignee?.sub ?? "");
   const [deadline, setDeadline] = useState(epic?.deadline ?? "");
+
+  const showToast = (message: string, type: "success" | "error") => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  const saveUpdatedField = async (
+    field: string,
+    value: string | null,
+    revert: () => void,
+  ) => {
+    if (!epic) return;
+    setSaving(true);
+
+    const result = await updateEpicAction(epic.id, { [field]: value });
+
+    if (!result.success) {
+      revert();
+      showToast("Failed to update epic. Please try again.", "error");
+      setSaving(false);
+      return;
+    }
+
+    dispatch(
+      updateEpicDetails({ epicId: epic.id, changes: { [field]: value } }),
+    );
+    showToast("Epic updated successfully.", "success");
+    setSaving(false);
+  };
+
+  const handleTitleBlur = () => {
+    const trimmedTitle = title.trim();
+    if (
+      !trimmedTitle ||
+      trimmedTitle.length < 3 ||
+      trimmedTitle === epic?.title
+    )
+      return;
+
+    saveUpdatedField("title", trimmedTitle, () => setTitle(epic?.title ?? ""));
+  };
+
+  const handleDescriptionBlur = () => {
+    const trimmedDescription = description?.trim();
+    if (trimmedDescription === (epic?.description ?? "")) return;
+
+    saveUpdatedField("description", trimmedDescription || null, () =>
+      setDescription(epic?.description ?? ""),
+    );
+  };
+
+  const handleAssigneeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setAssigneeId(value);
+
+    const member = members.find((m) => m.user_id === value);
+    const newAssignee: EpicUser | null = member
+      ? {
+          sub: member.user_id,
+          name: member.metadata.name,
+          email: member.email,
+          department: member.metadata.department,
+        }
+      : null;
+
+    saveUpdatedField("assignee_id", value || null, () =>
+      setAssigneeId(epic?.assignee?.sub ?? ""),
+    );
+
+    if (epic) {
+      dispatch(
+        updateEpicDetails({
+          epicId: epic.id,
+          changes: { assignee: newAssignee },
+        }),
+      );
+    }
+  };
+
+  const handleDeadlineChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setDeadline(value);
+
+    saveUpdatedField("deadline", value || null, () =>
+      setDeadline(epic?.deadline ?? ""),
+    );
+  };
 
   return (
     <>
@@ -70,12 +178,11 @@ export default function EpicModal({ epic, loading, error, onClose }: Props) {
                     />
                     {epic.epic_id}
                   </span>
-                  {/* <h2 className="text-xl font-semibold text-gray-900 mt-2">
-                    {epic.title}
-                  </h2> */}
                   <input
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
+                    onBlur={handleTitleBlur}
+                    disabled={saving}
                     className="mt-2 w-full text-xl font-semibold text-gray-900
                       outline-none border-b-2 border-transparent
                       focus:border-primary bg-transparent transition-colors
@@ -96,12 +203,11 @@ export default function EpicModal({ epic, loading, error, onClose }: Props) {
               {/* Body */}
               <div className="p-6 flex flex-col gap-6">
                 {/* Description */}
-                {/* <p className="text-sm text-gray-700 leading-relaxed">
-                  {epic.description ?? "No description provided."}
-                </p> */}
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
+                  onBlur={handleDescriptionBlur}
+                  disabled={saving}
                   rows={3}
                   placeholder="No description provided."
                   className="w-full text-sm text-gray-700 leading-relaxed
@@ -138,42 +244,42 @@ export default function EpicModal({ epic, loading, error, onClose }: Props) {
                     <p className="text-[.625rem] uppercase font-bold text-[#041B3C66] mb-2">
                       Assignee
                     </p>
-                    {epic.assignee?.name ? (
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={cn(
-                            "rounded-xl font-bold flex items-center justify-center",
-                            "w-7 h-7 sm:w-8 sm:h-8  sm:text-sm",
-                            "bg-[#CDDDFF] text-[#51617E]",
-                          )}
-                        >
-                          {getNameInitials(epic?.assignee?.name)}
-                        </span>
-                        <p className="text-xs md:text-sm font-medium text-gray-900">
-                          {epic.assignee.name}
-                        </p>
-                      </div>
-                    ) : (
-                      <p className="text-sm text-slate-medium font-bold">
-                        Unassigned
-                      </p>
-                    )}
+                    <select
+                      value={assigneeId}
+                      onChange={handleAssigneeChange}
+                      disabled={saving}
+                      className="w-full text-sm text-gray-700 outline-none
+                        border border-transparent rounded-sm px-2 py-1.5
+                        hover:bg-gray-50 focus:border-primary focus:bg-white
+                        bg-transparent transition-colors cursor-pointer
+                        disabled:opacity-60"
+                    >
+                      <option value="">Unassigned</option>
+                      {members.map((member) => (
+                        <option key={member.user_id} value={member.user_id}>
+                          {member.metadata.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
-                  {/* Created At */}
+                  {/* Deadline */}
                   <div>
-                    <p className="text-[.625rem] uppercase font-bold text-[#041B3C66]  mb-2">
-                      Created At
+                    <p className="text-[.625rem] uppercase font-bold text-[#737685] mb-2">
+                      Deadline
                     </p>
-                    <p className="text-sm text-slate-dark font-medium flex items-center gap-1">
-                      <Image
-                        src={DateIcon}
-                        height={14}
-                        width={14}
-                        alt="calender-icon"
-                      />
-                      {formatDate(epic.created_at)}
-                    </p>
+                    <input
+                      type="date"
+                      value={deadline}
+                      min={today}
+                      onChange={handleDeadlineChange}
+                      disabled={saving}
+                      className="w-full text-sm text-gray-700 outline-none
+                        border border-transparent rounded-sm px-2 py-1.5
+                        hover:bg-gray-50 focus:border-primary focus:bg-white
+                        bg-transparent transition-colors cursor-pointer
+                        disabled:opacity-60"
+                    />
                   </div>
                 </div>
 
@@ -183,6 +289,8 @@ export default function EpicModal({ epic, loading, error, onClose }: Props) {
           )}
         </div>
       </div>
+
+      {toast && <Toast message={toast.message} type={toast.type} />}
     </>
   );
 }
