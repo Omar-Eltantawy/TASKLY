@@ -14,11 +14,18 @@ function isOverdue(date: string): boolean {
 function isToday(date: string): boolean {
   return new Date(date).toDateString() === new Date().toDateString();
 }
-export default function BoardTaskCard({ task }: { task: Task }) {
+export default function BoardTaskCard({
+  task,
+  onClick,
+}: {
+  task: Task;
+  onClick: () => void;
+}) {
   return (
     <div
+      onClick={onClick}
       className={cn(
-        "mt-2 p-4 flex flex-col gap-2 rounded-md",
+        "mt-2 p-4 flex flex-col gap-2 rounded-md cursor-pointer",
         isOverdue(task.due_date)
           ? "bg-[#FFDAD633] border-[#BA1A1A1A]"
           : "bg-white",

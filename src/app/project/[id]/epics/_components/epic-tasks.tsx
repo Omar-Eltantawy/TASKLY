@@ -12,9 +12,11 @@ import { formatDate } from "@/app/project/_components/project-card";
 import CheckedIcon from "../../../../../../public/icons/gray-checked.svg";
 import EpicTasksSkeleton from "./epic-tasks-skeleton";
 import Link from "next/link";
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { openTaskModal } from "@/store/features/ui/slice";
 
 export default function EpicTasks({ epic }: { epic: Epic }) {
+  const dispatch = useAppDispatch();
   const { projectId } = useAppSelector((state) => state.activeProject);
   const [tasks, setTaskes] = useState<Task[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -63,11 +65,14 @@ export default function EpicTasks({ epic }: { epic: Epic }) {
           Add Tasks
         </Link>
       </div>
-      {tasks.length > 0 ? (
+      {tasks.length > 0 && projectId ? (
         <div className="flex flex-col">
           {tasks.map((task) => (
             <div
               key={task.id}
+              onClick={() =>
+                dispatch(openTaskModal({ taskId: task.id, projectId }))
+              }
               className="grid grid-cols-[auto_1fr_auto] gap-4 items-center px-3 py-3 border-b border-[#F1F3FF] last:border-0 hover:bg-gray-50 transition-colors"
             >
               <Image

@@ -5,9 +5,15 @@ import { formatDate } from "@/app/project/_components/project-card";
 import { cn } from "@/shared/lib/utils/tailwind-merge";
 import { COLUMN_COLORS, STATUS_LABELS } from "@/shared/lib/constants/constants";
 import { getNameInitials } from "@/shared/lib/utils/getNameInitial";
-export default function MobileTaskCard({ task }: { task: Task }) {
+export default function MobileTaskCard({
+  task,
+  onClick,
+}: {
+  task: Task;
+  onClick: () => void;
+}) {
   return (
-    <div className="px-6 py-3 border-b border-[#F1F3FF] ">
+    <div onClick={onClick} className="px-6 py-3 border-b border-[#F1F3FF] ">
       <div className="flex items-center justify-between">
         <span className="text-xs uppercase font-normal text-[#43465480]">
           {task.task_id}

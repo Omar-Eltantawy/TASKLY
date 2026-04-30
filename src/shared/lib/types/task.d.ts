@@ -1,4 +1,5 @@
 import { TASK_STATUSES } from "../constants/constants";
+import { User } from "./user";
 
 export type TaskStatus = (typeof TASK_STATUSES)[number];
 
@@ -38,4 +39,8 @@ export type AddTaskResult =
 
 export type GetEpicTasksResult =
   | { success: true; tasks: Task[] }
+  | { success: false; error: string };
+
+export type GetTaskDetailResult =
+  | { success: true; task: Task }
   | { success: false; error: string };

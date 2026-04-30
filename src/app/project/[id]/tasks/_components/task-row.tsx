@@ -5,11 +5,17 @@ import { formatDate } from "@/app/project/_components/project-card";
 import { cn } from "@/shared/lib/utils/tailwind-merge";
 import { COLUMN_COLORS, STATUS_LABELS } from "@/shared/lib/constants/constants";
 import { getNameInitials } from "@/shared/lib/utils/getNameInitial";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { openTaskModal } from "@/store/features/ui/slice";
 export default function TaskRow({ task }: { task: Task }) {
+  const dispatch = useAppDispatch();
+  const { projectId } = useAppSelector((state) => state.activeProject);
+  if (!projectId) return;
   return (
     <div
+      onClick={() => dispatch(openTaskModal({ taskId: task.id, projectId }))}
       className="hidden md:grid grid-cols-[1fr_2fr_1fr_1fr_1fr_auto]
-            px-6 py-3 border-b border-[#F1F3FF]"
+            px-6 py-3 border-b border-[#F1F3FF] cursor-pointer"
     >
       <span className="text-xs uppercase font-normal text-primary">
         {task.task_id}
