@@ -4,6 +4,8 @@ import { cn } from "@/shared/lib/utils/tailwind-merge";
 import { getNameInitials } from "@/shared/lib/utils/getNameInitial";
 import { Epic } from "@/shared/lib/types/epic";
 import { ProjectMember } from "@/shared/lib/types/project";
+import AssigneeSelect from "./assignee-select";
+import Input from "@/shared/ui/input";
 
 type Props = {
   epic: Epic;
@@ -62,53 +64,16 @@ export default function EpicMeta({
         </p>
 
         {isEditingAssignee ? (
-          //   <select
-          //     value={assigneeId}
-          //     onChange={(e) => {
-          //       handleAssigneeChange(e);
-          //       setIsEditingAssignee(false);
-          //     }}
-          //     onBlur={() => setIsEditingAssignee(false)}
-          //     disabled={saving}
-          //     className="w-full text-sm text-gray-700 outline-none
-          //       border border-transparent rounded-sm px-2 py-1.5
-          //       hover:bg-gray-50 focus:border-primary focus:bg-white
-          //       bg-transparent transition-colors cursor-pointer
-          //       disabled:opacity-60"
-          //   >
-          //     <option value="">Unassigned</option>
-          //     {members.map((member) => (
-          //       <option key={member.user_id} value={member.user_id}>
-          //         {member.metadata.name}
-          //       </option>
-          //     ))}
-          //   </select>
-          <select
+          <AssigneeSelect
             value={assigneeId}
+            members={members}
+            saving={saving}
             onChange={(e) => {
               handleAssigneeChange(e);
               setIsEditingAssignee(false);
             }}
             onBlur={() => setIsEditingAssignee(false)}
-            disabled={saving}
-            className="w-full
-    text-xs sm:text-sm md:text-base
-    text-gray-700
-    outline-none
-    border border-transparent rounded-sm
-    px-2 py-2 sm:py-1.5
-    hover:bg-gray-50 focus:border-primary focus:bg-white
-    bg-transparent transition-colors cursor-pointer
-    disabled:opacity-60"
-          >
-            <option value="">Unassigned</option>
-
-            {members.map((member) => (
-              <option key={member.user_id} value={member.user_id}>
-                {member.metadata.name}
-              </option>
-            ))}
-          </select>
+          />
         ) : epic?.assignee?.name ? (
           <div
             className="flex items-center gap-2 cursor-pointer"

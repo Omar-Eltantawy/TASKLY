@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Button from "@/shared/ui/button";
 import EpicIdIcon from "../../../../../../public/icons/epic-id.svg";
+import Input from "@/shared/ui/input";
 
 type Props = {
   epicId: string;
@@ -29,13 +30,13 @@ export default function EpicHeader({
           {epicId}
         </span>
 
-        <input
+        <Input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           onBlur={onBlur}
           disabled={saving}
-          className="mt-2 w-full text-xl font-semibold text-gray-900
-            outline-none border-b-2 border-transparent
+          parentClassName="-mb-2"
+          className=" w-full px-1 text-xl font-semibold text-gray-900 border-b-2 border-transparent
             focus:border-primary bg-transparent transition-colors
             disabled:opacity-60"
         />
