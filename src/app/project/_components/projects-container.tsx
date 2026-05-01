@@ -47,7 +47,6 @@ export default function ProjectsContainer() {
       <div className=" w-full">
         <ProjectsList projects={projects} />
         <Pagination
-          currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={(page) => dispatch(fetchProjects(page))}
           disabled={loading}

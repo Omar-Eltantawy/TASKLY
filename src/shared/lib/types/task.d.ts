@@ -37,6 +37,10 @@ export type AddTaskResult =
   | { success: true }
   | { success: false; error: string };
 
+export type GetTasksResult =
+  | { success: true; tasks: Task[]; totalCount: number; totalPages: number }
+  | { success: false; error: string };
+
 export type GetEpicTasksResult =
   | { success: true; tasks: Task[] }
   | { success: false; error: string };

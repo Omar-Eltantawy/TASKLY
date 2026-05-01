@@ -70,11 +70,8 @@ export default function EpicsContainer({ projectId }: { projectId: string }) {
         </Button>
       </div>
       <Pagination
-        currentPage={currentPage}
         totalPages={totalPages}
-        onPageChange={(page) => {
-          console.log(page);
-
+        onPageChange={(page: number) => {
           dispatch(fetchEpics({ projectId, page }));
         }}
         disabled={loading}
