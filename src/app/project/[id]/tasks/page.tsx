@@ -11,8 +11,7 @@ export default async function page({
   searchParams: Promise<{ view?: string; page?: string }>;
 }) {
   const { id } = await params;
-  const { view = "board", page = "1" } = await searchParams;
-  const currentPage = parseInt(page, 10);
+  const { view = "board" } = await searchParams;
 
   return (
     <div className="h-full flex flex-col overflow-hidden pb-20 lg:pb-5">
@@ -24,7 +23,7 @@ export default async function page({
         {view === "board" ? (
           <TasksBoard projectId={id} />
         ) : (
-          <TasksList projectId={id} currentPage={currentPage} />
+          <TasksList projectId={id} />
         )}
       </div>
     </div>

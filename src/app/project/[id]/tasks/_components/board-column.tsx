@@ -1,14 +1,13 @@
 "use client";
-import { Task, TaskStatus } from "@/shared/lib/types/task";
-import { useEffect, useState } from "react";
+import { TaskStatus } from "@/shared/lib/types/task";
 import BoardColumnSkeleton from "./board-column-skeleton";
 import BoardTaskCard from "./board-task-card";
 import { cn } from "@/shared/lib/utils/tailwind-merge";
 import Link from "next/link";
 import { COLUMN_COLORS } from "@/shared/lib/constants/constants";
-import { getTasksAction } from "@/shared/lib/actions/gat-tasks-by-status.actiom";
 import { useAppDispatch } from "@/store/hooks";
 import { openTaskModal } from "@/store/features/ui/slice";
+import { useGetTasks } from "../_hooks/use-get-tasks";
 
 type Props = {
   projectId: string;
@@ -18,26 +17,11 @@ type Props = {
 
 export default function BoardColumn({ projectId, status, label }: Props) {
   const dispatch = useAppDispatch();
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      setLoading(true);
-      const result = await getTasksAction(projectId, status);
-      if (!result.success) {
-        setLoading(false);
-        setError(result.error);
-        return;
-      }
-
-      setLoading(false);
-      setTasks(result.tasks);
-    };
-
-    fetchTasks();
-  }, [projectId, status]);
+  const { tasks, loading, error } = useGetTasks({
+    projectId,
+    status,
+  });
   return (
     <div className={`flex flex-col shrink-0 w-64  rounded-sm`}>
       {/* Column header */}

@@ -1,51 +1,37 @@
 "use client";
-import { getTasksAction } from "@/shared/lib/actions/gat-tasks-by-status.actiom";
-import { Task } from "@/shared/lib/types/task";
-import { useEffect, useState } from "react";
+
 import TaskRow from "./task-row";
 import Pagination from "@/shared/ui/pagination";
+import { useGetTasks } from "../_hooks/use-get-tasks";
+import { useRouter, useSearchParams } from "next/navigation";
+import TasksListSkeleton from "./tasks-list-skeleton";
 
-export default function TasksList({
-  projectId,
-  currentPage,
-}: {
-  projectId: string;
-  currentPage: number;
-}) {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [totalPages, setTotalPages] = useState(1);
-  //   const [loading, setLoading] = useState<boolean>(false);
-  //   const [error, setError] = useState<string | null>(null);
+export default function TasksList({ projectId }: { projectId: string }) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      //   setLoading(true);
-      const result = await getTasksAction(projectId, undefined, currentPage);
-      if (!result.success) {
-        // setLoading(false);
-        // setError(result.error);
-        return;
-      }
+  const currentPage = Number(searchParams.get("page") ?? "1");
 
-      //   setLoading(false);
-      setTasks(result.tasks);
-      setTotalPages(result.totalPages ?? 1);
-    };
+  const { tasks, loading, error, totalPages } = useGetTasks({
+    projectId,
+    page: currentPage,
+  });
 
-    fetchTasks();
-  }, [projectId, currentPage]);
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", String(page));
+
+    router.replace(`?${params.toString()}`, { scroll: false });
+  };
 
   return (
     <div className="bg-white shadow-[0_4px_24px_0_#041B3C0A]">
-      {/* Table header */}
-      <div
-        className="hidden md:grid grid-cols-[1fr_2fr_1fr_1fr_1fr]
-            px-6 py-3 border-b border-[#F1F3FF]"
-      >
+      {/* Header */}
+      <div className="hidden md:grid grid-cols-[1fr_2fr_1fr_1fr_1fr] px-6 py-3 border-b border-[#F1F3FF]">
         <span className="text-xs uppercase font-bold text-[#434654]">
           Task ID
         </span>
-        <span className="text-xs uppercase font-bold  text-[#434654] ">
+        <span className="text-xs uppercase font-bold text-[#434654]">
           Title
         </span>
         <span className="text-xs uppercase font-bold text-[#434654]">
@@ -55,21 +41,30 @@ export default function TasksList({
           Due Date
         </span>
         <span className="text-xs uppercase font-bold text-[#434654]">
-          Assigne
+          Assignee
         </span>
       </div>
-      {tasks.map((task) => (
-        <TaskRow key={task.id} task={task} />
-      ))}
-      <Pagination
-        totalPages={totalPages}
-        onPageChange={async (page) => {
-          const result = await getTasksAction(projectId, undefined, page);
-          if (!result.success) return;
-          setTasks(result.tasks);
-          setTotalPages(result.totalPages ?? 1);
-        }}
-      />
+
+      {/* Loading */}
+      {loading && <TasksListSkeleton />}
+
+      {/* Error */}
+      {error && <p className="text-center py-6 text-sm text-error">{error}</p>}
+
+      {/* Empty state */}
+      {!loading && !error && tasks.length === 0 && (
+        <p className="text-center py-6 text-sm text-slate-medium">
+          No tasks found.
+        </p>
+      )}
+
+      {/* Tasks */}
+      {!loading &&
+        !error &&
+        tasks.map((task) => <TaskRow key={task.id} task={task} />)}
+
+      {/* Pagination */}
+      <Pagination totalPages={totalPages} onPageChange={handlePageChange} />
     </div>
   );
 }

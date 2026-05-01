@@ -1,33 +1,23 @@
 "use client";
-import { getTasksAction } from "@/shared/lib/actions/gat-tasks-by-status.actiom";
-import { Task } from "@/shared/lib/types/task";
-import { useEffect, useState } from "react";
+
 import MobileTaskCard from "./mobile-task-card";
 import { useAppDispatch } from "@/store/hooks";
 import { openTaskModal } from "@/store/features/ui/slice";
+import { useGetTasks } from "../_hooks/use-get-tasks";
+import MobileTasksSkeleton from "./mobile-tasks-skeleton";
 
 export default function MobileTasks({ projectId }: { projectId: string }) {
   const dispatch = useAppDispatch();
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const { tasks, loading, error } = useGetTasks({ projectId });
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      setLoading(true);
-      const result = await getTasksAction(projectId);
-      if (!result.success) {
-        setLoading(false);
-        setError(result.error);
-        return;
-      }
+  if (loading) return <MobileTasksSkeleton />;
 
-      setLoading(false);
-      setTasks(result.tasks);
-    };
-
-    fetchTasks();
-  }, [projectId]);
+  if (error)
+    return (
+      <p className="text-center py-6 text-sm text-error">
+        Failed to load tasks
+      </p>
+    );
   return (
     <div>
       {tasks.map((task) => (
