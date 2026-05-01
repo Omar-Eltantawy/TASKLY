@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Epic } from "@/shared/lib/types/epic";
 import actionIcon from "../../../../../../public/icons/action.svg";
 import creatorIcon from "../../../../../../public/icons/creator.svg";
@@ -17,15 +16,12 @@ export default function EpicCard({
   epic: Epic;
   onClick: () => void;
 }) {
-  const [isDone, setIsDone] = useState(false);
-
   return (
     <div
       onClick={onClick}
-      //  setIsDone((prev) => !prev)
       className={cn(
         "shadow-xl rounded-md cursor-pointer transition-all duration-200 p-4 sm:p-5",
-        isDone ? "bg-[#E0E8FF]" : "bg-white border-l-4 border-[#004E32]",
+        "bg-white border-l-4 border-[#004E32]",
       )}
     >
       {/* Header */}
@@ -33,7 +29,7 @@ export default function EpicCard({
         <span
           className={cn(
             "text-[9px] sm:text-[10px] font-bold py-1 px-3 sm:px-4 rounded-sm",
-            isDone ? "bg-white text-primary" : "bg-[#82F9BE] text-[#005235]",
+            "bg-[#82F9BE] text-[#005235]",
           )}
         >
           {epic.epic_id}
@@ -55,9 +51,7 @@ export default function EpicCard({
               className={cn(
                 "rounded-xl font-bold flex items-center justify-center",
                 "w-9 h-9 sm:w-10 sm:h-10 text-xs sm:text-sm",
-                isDone
-                  ? "bg-[#003D9B] text-[#FDFDFD]"
-                  : "bg-[#65DCA4] text-[#002113]",
+                "bg-[#65DCA4] text-[#002113]",
               )}
             >
               {getNameInitials(epic.assignee.name)}
@@ -79,13 +73,10 @@ export default function EpicCard({
         {/* Status */}
         <span
           className={cn(
-            "text-[10px] sm:text-xs py-1 px-3 sm:px-4 rounded w-fit",
-            isDone
-              ? "bg-[#003D9B1A] text-primary font-semibold"
-              : "bg-surface-low text-[#004E32]",
+            "text-[10px] sm:text-xs py-1 px-3 sm:px-4 rounded w-fit bg-surface-low text-[#004E32]",
           )}
         >
-          {isDone ? "Done" : "TO DO"}
+          TO DO
         </span>
       </div>
 
@@ -97,7 +88,7 @@ export default function EpicCard({
           <span className="text-[10px] sm:text-xs text-slate-medium">
             created by :
           </span>
-          <span className="text-[10px] sm:text-xs font-medium text-slate-dark truncate max-w-[120px]">
+          <span className="text-[10px] sm:text-xs font-medium text-slate-dark truncate max-w-30">
             {epic.created_by.name}
           </span>
         </div>

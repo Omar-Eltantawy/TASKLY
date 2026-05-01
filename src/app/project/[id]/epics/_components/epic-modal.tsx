@@ -201,7 +201,7 @@ export default function EpicModal({
                 />
 
                 {/* Tasks */}
-                <EpicTasks />
+                <EpicTasks epic={epic} />
               </div>
             </>
           )}
