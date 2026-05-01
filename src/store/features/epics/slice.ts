@@ -1,7 +1,7 @@
 import { getEpicDetailAction } from "@/shared/lib/actions/get-epic-details.ction";
 import { getEpicsAction } from "@/shared/lib/actions/get-epics.action";
 import { Epic } from "@/shared/lib/types/epic";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type EpicsState = {
   epics: Epic[];
@@ -13,6 +13,7 @@ type EpicsState = {
   selectedEpic: Epic | null;
   detailLoading: boolean;
   detailError: string | null;
+  searchTerm: string;
 };
 
 const initialState: EpicsState = {
@@ -25,15 +26,20 @@ const initialState: EpicsState = {
   selectedEpic: null,
   detailLoading: false,
   detailError: null,
+  searchTerm: "",
 };
 
 export const fetchEpics = createAsyncThunk(
   "epics/fetchEpics",
   async (
-    { projectId, page }: { projectId: string; page: number },
+    {
+      projectId,
+      page = 1,
+      searchTerm = "",
+    }: { projectId: string; page: number; searchTerm?: string },
     { rejectWithValue },
   ) => {
-    const result = await getEpicsAction(projectId, page);
+    const result = await getEpicsAction(projectId, page, searchTerm);
     if (!result.success) return rejectWithValue(result);
 
     return result;
@@ -59,6 +65,10 @@ const epicsSlice = createSlice({
     clearSelectedEpic: (state) => {
       state.selectedEpic = null;
       state.detailError = null;
+    },
+    setEpicsSearch: (state, action: PayloadAction<string>) => {
+      state.searchTerm = action.payload;
+      state.currentPage = 1;
     },
   },
   extraReducers: (builder) => {
@@ -99,5 +109,5 @@ const epicsSlice = createSlice({
   },
 });
 
-export const { clearSelectedEpic } = epicsSlice.actions;
+export const { clearSelectedEpic, setEpicsSearch } = epicsSlice.actions;
 export default epicsSlice.reducer;

@@ -3,11 +3,12 @@
 import { cookies } from "next/headers";
 import { Epic, GetEpicsResult } from "../types/epic";
 
-const LIMIT = 6;
+const LIMIT = 1;
 
 export async function getEpicsAction(
   projectId: string,
   page: number = 1,
+  searchterm: string = "",
 ): Promise<GetEpicsResult> {
   try {
     const cookieStore = await cookies();
@@ -18,8 +19,13 @@ export async function getEpicsAction(
     }
 
     const offset = (page - 1) * LIMIT;
+
+    let query = `project_id=eq.${projectId}&limit=${LIMIT}&offset=${offset}`;
+    if (searchterm.trim()) {
+      query += `&title=ilike.%25${encodeURIComponent(searchterm.trim())}%25`;
+    }
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/rest/v1/project_epics?project_id=eq.${projectId}&limit=${LIMIT}&offset=${offset}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/rest/v1/project_epics?${query}`,
       {
         headers: {
           "Content-Type": "application/json",

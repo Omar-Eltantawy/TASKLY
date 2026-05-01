@@ -1,9 +1,9 @@
 import Button from "@/shared/ui/button";
 import Image from "next/image";
 import addEpicIcon from "../../../../../public/icons/add.svg";
-import Input from "@/shared/ui/input";
 import Link from "next/link";
 import EpicsContainer from "./_components/epics-container";
+import EpicsSearch from "./_components/epics-search";
 
 export default async function page({
   params,
@@ -18,12 +18,7 @@ export default async function page({
           Project Epics
         </h1>
         <div className="flex items-center justify-center text-center mx-auto md:mx-0 gap-2">
-          <Input
-            type="search"
-            placeholder="Search Epics.."
-            className="py-4"
-            parentClassName="mt-5"
-          />
+          <EpicsSearch projectId={id} />
           <Link href={`/project/${id}/epics/new`} className="hidden md:block">
             <Button className="flex items-center gap-2 text-sm">
               <Image src={addEpicIcon} alt="add epic" width={16} height={16} />
