@@ -1,40 +1,158 @@
-import { formatDate } from "@/app/project/_components/project-card";
-import { Epic } from "@/shared/lib/types/epic";
-import Button from "@/shared/ui/button";
-import EpicIdIcon from "../../../../../../public/icons/epic-id.svg";
-import DateIcon from "../../../../../../public/icons/calender.svg";
-import Image from "next/image";
-import { cn } from "@/shared/lib/utils/tailwind-merge";
-import { getNameInitials } from "@/shared/lib/utils/getNameInitial";
+"use client";
+
+import { Epic, EpicUser } from "@/shared/lib/types/epic";
+import { ProjectMember } from "@/shared/lib/types/project";
+import { useState } from "react";
+import { useAppDispatch } from "@/store/hooks";
+import { updateEpicAction } from "@/shared/lib/actions/update-epic.action";
+import { updateEpicDetails } from "@/store/features/epics/slice";
+import { Toast } from "@/shared/ui/toast";
+import EpicHeader from "./epic-header";
+import EpicDescription from "./epic-description";
+import EpicMeta from "./epic.meta";
 import EpicTasks from "./epic-tasks";
 
 type Props = {
   epic: Epic | null;
+  members: ProjectMember[];
   loading: boolean;
   error: string | null;
   onClose: () => void;
 };
 
-export default function EpicModal({ epic, loading, error, onClose }: Props) {
+export default function EpicModal({
+  epic,
+  loading,
+  error,
+  onClose,
+  members,
+}: Props) {
+  const dispatch = useAppDispatch();
+
+  const [isEditingAssignee, setIsEditingAssignee] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
+
+  const [title, setTitle] = useState(epic?.title ?? "");
+  const [description, setDescription] = useState(epic?.description ?? "");
+  const [assigneeId, setAssigneeId] = useState(epic?.assignee?.sub ?? "");
+  const [deadline, setDeadline] = useState(epic?.deadline ?? "");
+
+  const showToast = (message: string, type: "success" | "error") => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  const saveUpdatedField = async (
+    field: string,
+    value: string | null,
+    revert: () => void,
+  ) => {
+    if (!epic) return;
+
+    setSaving(true);
+
+    const result = await updateEpicAction(epic.id, { [field]: value });
+
+    if (!result.success) {
+      revert();
+      showToast("Failed to update epic. Please try again.", "error");
+      setSaving(false);
+      return;
+    }
+
+    dispatch(
+      updateEpicDetails({
+        epicId: epic.id,
+        changes: { [field]: value },
+      }),
+    );
+
+    showToast("Epic updated successfully.", "success");
+    setSaving(false);
+  };
+
+  /* Handlers */
+  const handleTitleBlur = () => {
+    const trimmed = title.trim();
+
+    if (!trimmed || trimmed.length < 3 || trimmed === epic?.title) return;
+
+    saveUpdatedField("title", trimmed, () => setTitle(epic?.title ?? ""));
+  };
+
+  const handleDescriptionBlur = () => {
+    const trimmed = description?.trim();
+
+    if (trimmed === (epic?.description ?? "")) return;
+
+    saveUpdatedField("description", trimmed || null, () =>
+      setDescription(epic?.description ?? ""),
+    );
+  };
+
+  const handleAssigneeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setAssigneeId(value);
+
+    const member = members.find((m) => m.user_id === value);
+
+    const newAssignee: EpicUser | null = member
+      ? {
+          sub: member.user_id,
+          name: member.metadata.name,
+          email: member.email,
+          department: member.metadata.department,
+        }
+      : null;
+
+    saveUpdatedField("assignee_id", value || null, () =>
+      setAssigneeId(epic?.assignee?.sub ?? ""),
+    );
+
+    if (epic) {
+      dispatch(
+        updateEpicDetails({
+          epicId: epic.id,
+          changes: { assignee: newAssignee },
+        }),
+      );
+    }
+  };
+
+  const handleDeadlineChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setDeadline(value);
+
+    saveUpdatedField("deadline", value || null, () =>
+      setDeadline(epic?.deadline ?? ""),
+    );
+  };
+
   return (
     <>
+      {/* Overlay */}
       <div
         className="fixed inset-0 bg-[#041B3C33]/90 blur-2xl z-50"
         onClick={onClose}
       />
+
+      {/* Modal */}
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
         <div
-          className="bg-white w-full max-w-[95%] md:max-w-[60%] lg:max-w-[40%] max-h-[90vh] overflow-y-auto
-            shadow-[0_48px_24px_0_#041B3C1A] flex flex-col"
+          className="bg-white w-full max-w-[95%] md:max-w-[60%] lg:max-w-[40%]
+          max-h-[90vh] overflow-y-auto
+          shadow-[0_48px_24px_0_#041B3C1A] flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Loading */}
           {loading && (
             <div className="flex items-center justify-center py-20">
-              <div
-                className="w-6 h-6 border-2 border-primary border-t-transparent
-                rounded-full animate-spin"
-              />
+              <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
             </div>
           )}
 
@@ -42,9 +160,7 @@ export default function EpicModal({ epic, loading, error, onClose }: Props) {
           {error && !loading && (
             <div className="flex flex-col items-center justify-center py-16 gap-3 px-6">
               <p className="text-error text-sm text-center">{error}</p>
-              <Button variant="ghost" onClick={onClose}>
-                Close
-              </Button>
+              <button onClick={onClose}>Close</button>
             </div>
           )}
 
@@ -52,145 +168,48 @@ export default function EpicModal({ epic, loading, error, onClose }: Props) {
           {epic && !loading && (
             <>
               {/* Header */}
-              <div className="flex items-start justify-between p-6 border-b border-[#F1F3FF]">
-                <div className="flex-1 min-w-0 pr-4">
-                  <span className="text-xs font-bold text-slate-500 px-2 py-1 rounded-sm flex items-center gap-1">
-                    <Image
-                      src={EpicIdIcon}
-                      height={14}
-                      width={14}
-                      alt="epic-id-icon"
-                    />
-                    {epic.epic_id}
-                  </span>
-                  <h2 className="text-xl font-semibold text-gray-900 mt-2">
-                    {epic.title}
-                  </h2>
-                </div>
-
-                {/* Close button */}
-                <Button
-                  variant="secondary"
-                  onClick={onClose}
-                  className="p-1.5 rounded-md hover:bg-gray-100 transition-colors shrink-0"
-                >
-                  x
-                </Button>
-              </div>
+              <EpicHeader
+                epicId={epic.epic_id}
+                title={title}
+                setTitle={setTitle}
+                onBlur={handleTitleBlur}
+                saving={saving}
+                onClose={onClose}
+              />
 
               {/* Body */}
               <div className="p-6 flex flex-col gap-6">
                 {/* Description */}
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  {epic.description ?? "No description provided."}
-                </p>
+                <EpicDescription
+                  description={description}
+                  setDescription={setDescription}
+                  onBlur={handleDescriptionBlur}
+                  saving={saving}
+                />
 
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-14  ">
-                  {/* Created By */}
-                  <div>
-                    <p className="text-[.625rem] uppercase font-bold text-[#041B3C66] mb-2">
-                      Created By
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={cn(
-                          "rounded-xl font-bold flex items-center justify-center",
-                          "w-7 h-7 sm:w-8 sm:h-8 text-xs sm:text-sm",
-                          "bg-primary-container text-[#FDFDFD]",
-                        )}
-                      >
-                        {getNameInitials(epic.created_by.name)}
-                      </span>
-                      <p className="text-xs md:text-sm  font-medium text-gray-900">
-                        {epic.created_by.name}
-                      </p>
-                    </div>
-                  </div>
+                {/* Meta */}
+                <EpicMeta
+                  epic={epic}
+                  members={members}
+                  isEditingAssignee={isEditingAssignee}
+                  setIsEditingAssignee={setIsEditingAssignee}
+                  assigneeId={assigneeId}
+                  handleAssigneeChange={handleAssigneeChange}
+                  deadline={deadline}
+                  handleDeadlineChange={handleDeadlineChange}
+                  saving={saving}
+                />
 
-                  {/* Assignee */}
-                  <div>
-                    <p className="text-[.625rem] uppercase font-bold text-[#041B3C66] mb-2">
-                      Assignee
-                    </p>
-                    {epic.assignee?.name ? (
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={cn(
-                            "rounded-xl font-bold flex items-center justify-center",
-                            "w-7 h-7 sm:w-8 sm:h-8  sm:text-sm",
-                            "bg-[#CDDDFF] text-[#51617E]",
-                          )}
-                        >
-                          {getNameInitials(epic?.assignee?.name)}
-                        </span>
-                        <p className="text-xs md:text-sm font-medium text-gray-900">
-                          {epic.assignee.name}
-                        </p>
-                      </div>
-                    ) : (
-                      <p className="text-sm text-slate-medium font-bold">
-                        Unassigned
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Created At */}
-                  <div>
-                    <p className="text-[.625rem] uppercase font-bold text-[#041B3C66]  mb-2">
-                      Created At
-                    </p>
-                    <p className="text-sm text-slate-dark font-medium flex items-center gap-1">
-                      <Image
-                        src={DateIcon}
-                        height={14}
-                        width={14}
-                        alt="calender-icon"
-                      />
-                      {formatDate(epic.created_at)}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Epic Tasks — empty state */}
-                {/* <div>
-                  <div className="flex items-center justify-between">
-                    <p className="text-lg  font-bold text-slate-dark mb-3 mt-5">
-                      Tasks
-                    </p>
-                    <p className="text-sm font-semibold text-primary-container mb-3 mt-5 flex items-center gap-1 cursor-pointer">
-                      <Image
-                        src={AddIcon}
-                        height={13}
-                        width={13}
-                        alt="add-tasks-icon"
-                      />
-                      Add Tasks
-                    </p>
-                  </div>
-                  <div
-                    className="bg-surface-low border border-dashed border-gray-200 rounded-sm
-                    py-10 flex flex-col items-center justify-center gap-4"
-                  >
-                    <div className="bg-[#D7E2FF] p-4 rounded-md">
-                      <Image
-                        src={ListIcon}
-                        height={16}
-                        width={16}
-                        alt="calender-icon"
-                      />
-                    </div>
-                    <p className="text-1rem text-slate-dark font-bold text-center">
-                      No tasks have been added to this epic yet.
-                    </p>
-                    <Button className="text-sm">+ Add Task</Button>
-                  </div>
-                </div> */}
+                {/* Tasks */}
                 <EpicTasks epic={epic} />
               </div>
             </>
           )}
         </div>
       </div>
+
+      {/* Toast */}
+      {toast && <Toast message={toast.message} type={toast.type} />}
     </>
   );
 }

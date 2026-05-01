@@ -37,3 +37,14 @@ export type GetEpicsResult =
       currentPage: number;
     }
   | { success: false; error: string; status?: number };
+
+export type UpdateEpicPayload = {
+  title?: string;
+  description?: string | null;
+  assignee_id?: string | null;
+  deadline?: string | null;
+};
+
+export type UpdateEpicResult =
+  | { success: true }
+  | { success: false; error: string };

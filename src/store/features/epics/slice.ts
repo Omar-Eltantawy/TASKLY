@@ -66,6 +66,20 @@ const epicsSlice = createSlice({
       state.selectedEpic = null;
       state.detailError = null;
     },
+    updateEpicDetails: (
+      state,
+      action: PayloadAction<{ epicId: string; changes: Partial<Epic> }>,
+    ) => {
+      const { epicId, changes } = action.payload;
+      const index = state.epics.findIndex((e) => e.id === epicId);
+
+      if (index !== -1) {
+        state.epics[index] = { ...state.epics[index], ...changes };
+      }
+      if (state?.selectedEpic?.id == epicId) {
+        state.selectedEpic = { ...state.selectedEpic, ...changes };
+      }
+    },
     setEpicsSearch: (state, action: PayloadAction<string>) => {
       state.searchTerm = action.payload;
       state.currentPage = 1;
@@ -109,5 +123,6 @@ const epicsSlice = createSlice({
   },
 });
 
-export const { clearSelectedEpic, setEpicsSearch } = epicsSlice.actions;
+export const { clearSelectedEpic, updateEpicDetails, setEpicsSearch } =
+  epicsSlice.actions;
 export default epicsSlice.reducer;
