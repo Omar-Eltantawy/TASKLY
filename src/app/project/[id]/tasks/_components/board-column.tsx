@@ -7,6 +7,8 @@ import { cn } from "@/shared/lib/utils/tailwind-merge";
 import Link from "next/link";
 import { COLUMN_COLORS } from "@/shared/lib/constants/constants";
 import { getTasksAction } from "@/shared/lib/actions/gat-tasks-by-status.actiom";
+import { useAppDispatch } from "@/store/hooks";
+import { openTaskModal } from "@/store/features/ui/slice";
 
 type Props = {
   projectId: string;
@@ -15,6 +17,7 @@ type Props = {
 };
 
 export default function BoardColumn({ projectId, status, label }: Props) {
+  const dispatch = useAppDispatch();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -80,7 +83,15 @@ export default function BoardColumn({ projectId, status, label }: Props) {
             Failed to load tasks
           </p>
         ) : (
-          tasks.map((task) => <BoardTaskCard key={task.id} task={task} />)
+          tasks.map((task) => (
+            <BoardTaskCard
+              onClick={() =>
+                dispatch(openTaskModal({ taskId: task.id, projectId }))
+              }
+              key={task.id}
+              task={task}
+            />
+          ))
         )}
       </div>
     </div>

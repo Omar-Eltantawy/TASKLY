@@ -13,6 +13,7 @@ type EpicsState = {
   selectedEpic: Epic | null;
   detailLoading: boolean;
   detailError: string | null;
+  searchTerm: string;
 };
 
 const initialState: EpicsState = {
@@ -25,15 +26,20 @@ const initialState: EpicsState = {
   selectedEpic: null,
   detailLoading: false,
   detailError: null,
+  searchTerm: "",
 };
 
 export const fetchEpics = createAsyncThunk(
   "epics/fetchEpics",
   async (
-    { projectId, page }: { projectId: string; page: number },
+    {
+      projectId,
+      page = 1,
+      searchTerm = "",
+    }: { projectId: string; page: number; searchTerm?: string },
     { rejectWithValue },
   ) => {
-    const result = await getEpicsAction(projectId, page);
+    const result = await getEpicsAction(projectId, page, searchTerm);
     if (!result.success) return rejectWithValue(result);
 
     return result;
@@ -74,6 +80,10 @@ const epicsSlice = createSlice({
         state.selectedEpic = { ...state.selectedEpic, ...changes };
       }
     },
+    setEpicsSearch: (state, action: PayloadAction<string>) => {
+      state.searchTerm = action.payload;
+      state.currentPage = 1;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -113,5 +123,6 @@ const epicsSlice = createSlice({
   },
 });
 
-export const { clearSelectedEpic, updateEpicDetails } = epicsSlice.actions;
+export const { clearSelectedEpic, updateEpicDetails, setEpicsSearch } =
+  epicsSlice.actions;
 export default epicsSlice.reducer;
