@@ -32,13 +32,13 @@ export default function ProjectCard({ project }: { project: Project }) {
   return (
     <div
       onClick={handleClick}
-      className="rounded-lg p-4 bg-white shadow-xs w-76 h-55 flex flex-col justify-between cursor-pointer hover:scale-105 hover:shadow-2xl transition-all"
+      className="rounded-lg p-4 bg-white shadow-xs w-76 h-55 flex flex-col justify-between cursor-pointer hover:scale-105 hover:shadow-2xl transition-all max-w-full"
     >
-      <h3 className="font-semibold text-lg text-slate-dark max-w-full">
+      <h3 className="font-semibold text-lg text-slate-dark line-clamp-3">
         {project.name}
       </h3>
 
-      <p className="text-sm text-[#434654]  max-w-full">
+      <p className="text-sm text-[#434654]  line-clamp-3">
         {project.description}
       </p>
 
