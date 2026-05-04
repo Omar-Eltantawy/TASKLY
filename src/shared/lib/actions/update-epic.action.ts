@@ -1,6 +1,5 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { UpdateEpicPayload, UpdateEpicResult } from "../types/epic";
 import { apiClient } from "../api/api-client";
 
