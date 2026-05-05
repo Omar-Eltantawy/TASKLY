@@ -7,6 +7,7 @@ import DelayedIcon from "../../../../../../public/icons/delayed.svg";
 import Image from "next/image";
 import { cn } from "@/shared/lib/utils/tailwind-merge";
 import { COLUMN_COLORS } from "@/shared/lib/constants/constants";
+import { useDraggable } from "@dnd-kit/core";
 
 function isOverdue(date: string): boolean {
   return new Date(date) < new Date(new Date().toDateString());
@@ -17,12 +18,28 @@ function isToday(date: string): boolean {
 export default function BoardTaskCard({
   task,
   onClick,
+  isDragging,
 }: {
   task: Task;
   onClick: () => void;
+  isDragging?: boolean;
 }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    isDragging: isBeingDragged,
+  } = useDraggable({
+    id: task.id,
+    data: { task },
+  });
+
   return (
     <div
+      ref={setNodeRef}
+      // style={style}
+      {...listeners} // ← drag listeners
+      {...attributes}
       onClick={onClick}
       className={cn(
         "mt-2 p-4 flex flex-col gap-2 rounded-md cursor-pointer",
@@ -30,6 +47,8 @@ export default function BoardTaskCard({
           ? "bg-[#FFDAD633] border-[#BA1A1A1A]"
           : "bg-white",
         isToday(task.due_date) ? "border-l-4 border-l-primary" : "",
+        isBeingDragged && !isDragging ? "opacity-30" : "opacity-100",
+        isDragging ? "shadow-2xl" : "shadow-sm",
       )}
     >
       <h3 className="text-sm font-medium text-slate-dark">{task.title}</h3>

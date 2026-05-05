@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 type RequestOptions = {
   method?: "GET" | "POST" | "PATCH" | "DELETE";
   body?: unknown;
+  headers?: Record<string, string>;
 };
 
 export async function apiClient(
@@ -31,6 +32,7 @@ export async function apiClient(
           "Content-Type": "application/json",
           apikey: process.env.NEXT_PUBLIC_API_KEY!,
           Authorization: `Bearer ${accessToken}`,
+          ...options.headers,
         },
         body: options.body ? JSON.stringify(options.body) : undefined,
         cache: "no-store",

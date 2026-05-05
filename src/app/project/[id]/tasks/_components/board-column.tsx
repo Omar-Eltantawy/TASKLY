@@ -1,26 +1,32 @@
 "use client";
-import { TaskStatus } from "@/shared/lib/types/task";
+import { Task, TaskStatus } from "@/shared/lib/types/task";
 import BoardColumnSkeleton from "./board-column-skeleton";
 import BoardTaskCard from "./board-task-card";
 import { cn } from "@/shared/lib/utils/tailwind-merge";
 import Link from "next/link";
 import { COLUMN_COLORS } from "@/shared/lib/constants/constants";
-import { useAppDispatch } from "@/store/hooks";
-import { openTaskModal } from "@/store/features/ui/slice";
-import { useGetTasks } from "../_hooks/use-get-tasks";
+import { useDroppable } from "@dnd-kit/core";
 
 type Props = {
   projectId: string;
   status: TaskStatus;
   label: string;
+  tasks: Task[];
+  loading: boolean;
+  onTaskClick: (taskId: string) => void;
 };
 
-export default function BoardColumn({ projectId, status, label }: Props) {
-  const dispatch = useAppDispatch();
-
-  const { tasks, loading, error } = useGetTasks({
-    projectId,
-    status,
+export default function BoardColumn({
+  projectId,
+  status,
+  label,
+  tasks,
+  loading,
+  onTaskClick,
+}: Props) {
+  const { setNodeRef, isOver } = useDroppable({
+    id: status,
+    data: { columnStatus: status },
   });
   return (
     <div className={`flex flex-col shrink-0 w-64  rounded-sm`}>
@@ -59,21 +65,25 @@ export default function BoardColumn({ projectId, status, label }: Props) {
       </Link>
 
       {/* Tasks list */}
-      <div className="flex-1 overflow-y-auto px-2 pb-2 flex flex-col gap-2">
+      <div
+        ref={setNodeRef}
+        className="flex-1 overflow-y-auto px-2 pb-2 flex flex-col gap-2"
+      >
         {loading ? (
           <BoardColumnSkeleton />
-        ) : error ? (
-          <p className="text-xs text-error text-center py-4 px-2">
-            Failed to load tasks
-          </p>
+        ) : tasks.length === 0 ? (
+          <div
+            className={cn(
+              "flex-1 border-2 border-dashed rounded-sm mt-2 transition-colors",
+              isOver ? "border-primary bg-primary/5" : "border-transparent",
+            )}
+          />
         ) : (
           tasks.map((task) => (
             <BoardTaskCard
-              onClick={() =>
-                dispatch(openTaskModal({ taskId: task.id, projectId }))
-              }
               key={task.id}
               task={task}
+              onClick={() => onTaskClick(task.id)}
             />
           ))
         )}
