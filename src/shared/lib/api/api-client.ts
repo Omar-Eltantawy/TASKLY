@@ -54,6 +54,7 @@ export async function apiClient(
       success: true,
       data,
       status: response.status,
+      contentRange: response.headers.get("content-range"),
     };
   } catch {
     return {

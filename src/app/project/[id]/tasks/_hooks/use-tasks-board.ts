@@ -18,7 +18,7 @@ type TasksMap = Record<TaskStatus, Task[]>;
 const emptyMap = (): TasksMap =>
   Object.fromEntries(TASK_STATUSES.map((s) => [s, [] as Task[]])) as TasksMap;
 
-export function useTasksBoard(projectId: string) {
+export function useTasksBoard(projectId: string, searchTerm: string) {
   const [tasksMap, setTasksMap] = useState<TasksMap>(emptyMap());
   const [loading, setLoading] = useState(true);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
@@ -38,7 +38,9 @@ export function useTasksBoard(projectId: string) {
       setLoading(true);
 
       const results = await Promise.all(
-        TASK_STATUSES.map((status) => getTasksAction(projectId, status, 1)),
+        TASK_STATUSES.map((status) =>
+          getTasksAction(projectId, status, 1, searchTerm),
+        ),
       );
 
       const map = emptyMap();
@@ -54,7 +56,7 @@ export function useTasksBoard(projectId: string) {
     };
 
     fetchAll();
-  }, [projectId]);
+  }, [projectId, searchTerm]);
 
   const showToast = (message: string, type: "success" | "error") => {
     setToast({ message, type });

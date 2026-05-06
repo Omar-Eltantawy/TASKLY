@@ -6,9 +6,18 @@ import { openTaskModal } from "@/store/features/ui/slice";
 import { useGetTasks } from "../_hooks/use-get-tasks";
 import MobileTasksSkeleton from "./mobile-tasks-skeleton";
 
-export default function MobileTasks({ projectId }: { projectId: string }) {
+export default function MobileTasks({
+  projectId,
+  searchTerm,
+}: {
+  projectId: string;
+  searchTerm: string;
+}) {
   const dispatch = useAppDispatch();
-  const { tasks, loading, error } = useGetTasks({ projectId });
+  const { tasks, loading, error } = useGetTasks({
+    projectId,
+    searchTerm,
+  });
 
   if (loading) return <MobileTasksSkeleton />;
 

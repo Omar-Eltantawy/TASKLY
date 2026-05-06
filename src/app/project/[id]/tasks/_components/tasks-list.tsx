@@ -6,7 +6,13 @@ import { useGetTasks } from "../_hooks/use-get-tasks";
 import { useRouter, useSearchParams } from "next/navigation";
 import TasksListSkeleton from "./tasks-list-skeleton";
 
-export default function TasksList({ projectId }: { projectId: string }) {
+export default function TasksList({
+  projectId,
+  searchTerm,
+}: {
+  projectId: string;
+  searchTerm: string;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -15,6 +21,7 @@ export default function TasksList({ projectId }: { projectId: string }) {
   const { tasks, loading, error, totalPages } = useGetTasks({
     projectId,
     page: currentPage,
+    searchTerm,
   });
 
   const handlePageChange = (page: number) => {

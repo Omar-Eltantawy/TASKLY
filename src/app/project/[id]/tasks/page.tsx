@@ -8,22 +8,22 @@ export default async function page({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ view?: string; page?: string }>;
+  searchParams: Promise<{ view?: string; page?: string; search?: string }>;
 }) {
   const { id } = await params;
-  const { view = "board" } = await searchParams;
+  const { view = "board", search = "" } = await searchParams;
 
   return (
     <div className="h-full flex flex-col overflow-hidden pb-20 lg:pb-5">
       <TasksHeader projectId={id} />
       <div className="block flex-1 min-h-0  md:hidden">
-        <MobileTasks projectId={id} />
+        <MobileTasks projectId={id} searchTerm={search} />
       </div>
       <div className="hidden md:block flex-1 min-h-0 ">
         {view === "board" ? (
-          <TasksBoard projectId={id} />
+          <TasksBoard projectId={id} searchTerm={search} />
         ) : (
-          <TasksList projectId={id} />
+          <TasksList projectId={id} searchTerm={search} />
         )}
       </div>
     </div>

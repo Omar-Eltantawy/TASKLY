@@ -6,10 +6,12 @@ export const useGetTasks = ({
   projectId,
   status,
   page = 1,
+  searchTerm,
 }: {
   projectId: string;
   status?: TaskStatus;
   page?: number;
+  searchTerm?: string;
 }) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [totalPages, setTotalPages] = useState<number>(1);
@@ -21,7 +23,7 @@ export const useGetTasks = ({
       setLoading(true);
       setError(null);
 
-      const result = await getTasksAction(projectId, status, page);
+      const result = await getTasksAction(projectId, status, page, searchTerm);
 
       if (!result.success) {
         setError(result.error);
@@ -35,6 +37,6 @@ export const useGetTasks = ({
     };
 
     fetchTasks();
-  }, [projectId, status, page]);
+  }, [projectId, status, page, searchTerm]);
   return { tasks, loading, error, totalPages };
 };

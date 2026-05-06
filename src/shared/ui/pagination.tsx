@@ -3,7 +3,7 @@ import { cn } from "../lib/utils/tailwind-merge";
 
 type Props = {
   totalPages: number;
-  onPageChange: (page: number) => void;
+  onPageChange?: (page: number) => void;
   disabled?: boolean;
 };
 
@@ -17,7 +17,10 @@ export default function Pagination({
   const currentPage = Number(searchParams.get("page") ?? "1");
 
   const goToPage = (page: number) => {
-    onPageChange(page);
+    if (onPageChange) {
+      onPageChange(page);
+    }
+
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", String(page));
     router.replace(`?${params.toString()}`, { scroll: false });

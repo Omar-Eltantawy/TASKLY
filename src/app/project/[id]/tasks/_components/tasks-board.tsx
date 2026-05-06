@@ -11,7 +11,13 @@ import BoardTaskCard from "./board-task-card";
 import { Toast } from "@/shared/ui/toast";
 import { useTasksBoard } from "../_hooks/use-tasks-board";
 
-export default function TasksBoard({ projectId }: { projectId: string }) {
+export default function TasksBoard({
+  projectId,
+  searchTerm,
+}: {
+  projectId: string;
+  searchTerm: string;
+}) {
   const dispatch = useAppDispatch();
 
   const {
@@ -22,7 +28,7 @@ export default function TasksBoard({ projectId }: { projectId: string }) {
     sensors,
     handleDragStart,
     handleDragEnd,
-  } = useTasksBoard(projectId);
+  } = useTasksBoard(projectId, searchTerm);
 
   return (
     <>

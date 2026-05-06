@@ -38,7 +38,13 @@ export type AddTaskResult =
   | { success: false; error: string };
 
 export type GetTasksResult =
-  | { success: true; tasks: Task[]; totalCount: number; totalPages: number }
+  | {
+      success: true;
+      tasks: Task[];
+      totalCount: number;
+      totalPages: number;
+      limit: number;
+    }
   | { success: false; error: string };
 
 export type GetEpicTasksResult =

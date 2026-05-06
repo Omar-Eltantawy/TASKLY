@@ -1,20 +1,21 @@
 "use client";
 
-import Input from "@/shared/ui/input";
 import Image from "next/image";
 import FilterIcon from "../../../../../../public/icons/filter.svg";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import Button from "@/shared/ui/button";
+import TasksSearch from "./tasks-search";
 
 export default function TasksHeader({ projectId }: { projectId: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentView = searchParams.get("view") ?? "board";
+
   const handleViewChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("view", e.target.value);
-
+    params.delete("page");
     router.replace(`/project/${projectId}/tasks?${params.toString()}`);
   };
   return (
@@ -29,12 +30,7 @@ export default function TasksHeader({ projectId }: { projectId: string }) {
       </div>
 
       <div className="flex items-center gap-2">
-        <Input
-          type="search"
-          parentClassName="mt-5 w-full"
-          className="w-full"
-          placeholder="Search tasks..."
-        />
+        <TasksSearch />
         <select
           value={currentView}
           onChange={handleViewChange}
