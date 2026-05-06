@@ -8,10 +8,14 @@ import addMember from "../../../../../../public/icons/new-member.svg";
 type Props = {
   projectId: string;
   onClose: () => void;
+  className?: string;
 };
 
-export default function InviteModal({ projectId, onClose }: Props) {
-  // Close on ESC + lock body scroll
+export default function InviteModalDesktop({
+  projectId,
+  onClose,
+  className,
+}: Props) {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -25,7 +29,7 @@ export default function InviteModal({ projectId, onClose }: Props) {
   }, [onClose]);
 
   const modal = (
-    <>
+    <div className={className}>
       {/* Overlay */}
       <div className="fixed inset-0 bg-[#041B3C33] z-50" onClick={onClose} />
 
@@ -77,7 +81,7 @@ export default function InviteModal({ projectId, onClose }: Props) {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 
   return createPortal(modal, document.body);

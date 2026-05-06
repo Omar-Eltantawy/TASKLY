@@ -66,6 +66,7 @@ export default function InviteForm({ projectId, onSuccess }: Props) {
             label="Email Address"
             type="email"
             className="w-full"
+            parentClassName="mt-10 mb-8 "
             placeholder="colleague@company.com"
             error={form.formState.errors.email}
             {...field}
@@ -73,11 +74,11 @@ export default function InviteForm({ projectId, onSuccess }: Props) {
         )}
       />
 
-      <div className="flex gap-3 mt-6">
+      <div className="flex flex-col md:flex-row gap-3 mt-6">
         <Button
           variant="ghost"
           disabled={form.formState.isSubmitting}
-          className="flex-1"
+          className="flex-1 order-2 md:order-1"
           onClick={onSuccess}
         >
           cancel
@@ -86,7 +87,7 @@ export default function InviteForm({ projectId, onSuccess }: Props) {
           type="submit"
           variant="primary"
           disabled={form.formState.isSubmitting}
-          className="flex-1"
+          className="flex-1 order-1 md:order-2"
         >
           {form.formState.isSubmitting ? "Sending..." : "Send Invitation"}
         </Button>

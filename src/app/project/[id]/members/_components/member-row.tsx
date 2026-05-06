@@ -5,7 +5,7 @@ import Image from "next/image";
 import { cn } from "@/shared/lib/utils/tailwind-merge";
 import { getNameInitials } from "@/shared/lib/utils/getNameInitial";
 import { useState } from "react";
-import InviteModal from "./invite-modal";
+import InviteModalGlobal from "./invite-modal-global";
 
 export const ROLE_STYLES: Record<ProjectMember["role"], string> = {
   owner: "bg-primary text-white",
@@ -62,7 +62,8 @@ export default function MemberRow({ member }: { member: ProjectMember }) {
         {/* )}  */}
       </span>
       {modalOpen && (
-        <InviteModal
+        <InviteModalGlobal
+          open={modalOpen}
           projectId={member.project_id}
           onClose={() => setModalOpen(false)}
         />
