@@ -1,8 +1,11 @@
+"use client";
 import { ProjectMember } from "@/shared/lib/types/project";
 import actionIcon from "../../../../../../public/icons/action.svg";
 import Image from "next/image";
 import { cn } from "@/shared/lib/utils/tailwind-merge";
 import { getNameInitials } from "@/shared/lib/utils/getNameInitial";
+import { useState } from "react";
+import InviteModalGlobal from "./invite-modal-global";
 
 export const ROLE_STYLES: Record<ProjectMember["role"], string> = {
   owner: "bg-primary text-white",
@@ -12,6 +15,8 @@ export const ROLE_STYLES: Record<ProjectMember["role"], string> = {
 };
 
 export default function MemberRow({ member }: { member: ProjectMember }) {
+  const [modalOpen, setModalOpen] = useState(false);
+
   const name = member.metadata.name;
 
   return (
@@ -42,7 +47,10 @@ export default function MemberRow({ member }: { member: ProjectMember }) {
         {member.role}
       </span>
 
-      <span className="text-xs font-semibold px-2.5 py-1 rounded-sm capitalize w-fit ">
+      <span
+        onClick={() => setModalOpen(true)}
+        className="text-xs font-semibold px-2.5 py-1 rounded-sm capitalize w-fit "
+      >
         {/* {member.role !== "owner" && ( */}
         <Image
           src={actionIcon}
@@ -53,6 +61,13 @@ export default function MemberRow({ member }: { member: ProjectMember }) {
         />
         {/* )}  */}
       </span>
+      {modalOpen && (
+        <InviteModalGlobal
+          open={modalOpen}
+          projectId={member.project_id}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
     </div>
   );
 }
