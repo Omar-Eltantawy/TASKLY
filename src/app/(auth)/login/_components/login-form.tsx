@@ -31,7 +31,9 @@ export default function LoginForm() {
       return;
     }
 
-    window.location.replace("/project");
+    const safeCallback = callback && callback !== "/" ? callback : "/project";
+
+    window.location.assign(safeCallback);
   };
   return (
     <form

@@ -5,7 +5,6 @@ import { getNameInitials } from "@/shared/lib/utils/getNameInitial";
 import { Epic } from "@/shared/lib/types/epic";
 import { ProjectMember } from "@/shared/lib/types/project";
 import AssigneeSelect from "./assignee-select";
-import Input from "@/shared/ui/input";
 
 type Props = {
   epic: Epic;

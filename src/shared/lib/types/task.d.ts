@@ -1,4 +1,5 @@
 import { TASK_STATUSES } from "../constants/constants";
+import { ProjectMember } from "./project";
 import { User } from "./user";
 
 export type TaskStatus = (typeof TASK_STATUSES)[number];
@@ -54,3 +55,33 @@ export type GetEpicTasksResult =
 export type GetTaskDetailResult =
   | { success: true; task: Task }
   | { success: false; error: string };
+
+export type UpdateTaskPayload = {
+  title?: string;
+  description?: string | null;
+  assignee_id?: string | null;
+  epic_id?: string | null;
+  due_date?: string | null;
+  status?: TaskStatus;
+};
+
+export type UpdateTaskResult =
+  | { success: true }
+  | { success: false; error: string };
+
+export type TaskDetailsProps = {
+  task: Task | null;
+  loading: boolean;
+  error: string | null;
+  members: ProjectMember[];
+  epics: Epic[];
+  onClose: () => void;
+  onUpdated: (changes: Partial<Task>) => void;
+  className?: string;
+};
+
+export type FieldSaveOptions = {
+  payload: Record<string, string | null>;
+  revert: () => void;
+  uiUpdate: Record<string, string | null>;
+};
