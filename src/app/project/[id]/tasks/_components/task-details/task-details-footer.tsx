@@ -10,11 +10,9 @@ export default function TaskDetailsFooter({ taskId, onClose }: Props) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
-    // Build the task-specific URL
     const url = `${window.location.origin}${window.location.pathname}?taskId=${taskId}`;
     navigator.clipboard.writeText(url);
 
-    // Brief feedback
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
