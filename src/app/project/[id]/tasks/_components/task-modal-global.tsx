@@ -5,16 +5,19 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { closeTaskModal } from "@/store/features/ui/slice";
 import { Task } from "@/shared/lib/types/task";
 import { getTaskDetailAction } from "@/shared/lib/actions/get-task-details.acction";
-import TaskDetailsModal from "./task-details-modal";
+import TaskDetailsModal from "./task-details/task-details-modal";
 import MobileTaskModal from "./mobile-task-modal";
+import { Epic } from "@/shared/lib/types/epic";
+import { getEpicsAction } from "@/shared/lib/actions/get-epics.action";
 
 export default function TaskModalGlobal() {
   const dispatch = useAppDispatch();
   const { open, taskId, projectId } = useAppSelector(
     (state) => state.ui.taskModal,
   );
-
+  const members = useAppSelector((state) => state.activeProject.members);
   const [task, setTask] = useState<Task | null>(null);
+  const [epics, setEpics] = useState<Epic[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -26,20 +29,34 @@ export default function TaskModalGlobal() {
       setError(null);
       setTask(null);
 
-      const result = await getTaskDetailAction(projectId, taskId);
+      // Fetch task + epics in parallel
+      const [taskResult, epicsResult] = await Promise.all([
+        getTaskDetailAction(projectId, taskId),
+        getEpicsAction(projectId, 1, ""),
+      ]);
 
-      if (!result.success) {
-        setError(result.error);
+      if (!taskResult.success) {
+        setError(taskResult.error);
         setLoading(false);
         return;
       }
 
-      setTask(result.task);
+      setTask(taskResult.task);
+      setEpics(epicsResult.success ? epicsResult.epics : []);
       setLoading(false);
     };
 
     fetch();
   }, [open, taskId, projectId]);
+  const handleClose = () => {
+    dispatch(closeTaskModal());
+    setTask(null);
+    setError(null);
+  };
+
+  const handleUpdated = (changes: Partial<Task>) => {
+    setTask((prev) => (prev ? { ...prev, ...changes } : prev));
+  };
 
   if (!open) return null;
 
@@ -50,11 +67,10 @@ export default function TaskModalGlobal() {
         task={task}
         loading={loading}
         error={error}
-        onClose={() => {
-          dispatch(closeTaskModal());
-          setTask(null);
-          setError(null);
-        }}
+        members={members}
+        epics={epics}
+        onClose={handleClose}
+        onUpdated={handleUpdated}
       />
       <MobileTaskModal
         className="block md:hidden"
