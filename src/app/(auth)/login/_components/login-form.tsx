@@ -5,9 +5,12 @@ import Button from "@/shared/ui/button";
 import Input from "@/shared/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 export default function LoginForm() {
+  const searchParams = useSearchParams();
+  const callback = searchParams.get("callback");
   const form = useForm<LoginFielsds>({
     defaultValues: {
       Email: "",
