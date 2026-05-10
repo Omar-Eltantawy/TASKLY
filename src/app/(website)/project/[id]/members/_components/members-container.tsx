@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import MembersSkeleton from "./member-skeleton";
 import MembersList from "./members-list";
-import ProjectError from "@/app/(statistics)/project/_components/project-error";
+import ProjectError from "@/app/(website)/project/_components/project-error";
 
 export default function MembersContainer() {
   const dispatch = useAppDispatch();

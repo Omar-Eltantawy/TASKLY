@@ -8,7 +8,7 @@ import { Task } from "@/shared/lib/types/task";
 import { Epic } from "@/shared/lib/types/epic";
 import { getEpicTasksAction } from "@/shared/lib/actions/get-epic-tasks.action";
 import { getNameInitials } from "@/shared/lib/utils/getNameInitial";
-import { formatDate } from "@/app/(statistics)/project/_components/project-card";
+import { formatDate } from "@/app/(website)/project/_components/project-card";
 import CheckedIcon from "../../../../../../../public/icons/gray-checked.svg";
 import EpicTasksSkeleton from "./epic-tasks-skeleton";
 import Link from "next/link";

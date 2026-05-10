@@ -1,4 +1,4 @@
-import { formatDate } from "@/app/(statistics)/project/_components/project-card";
+import { formatDate } from "@/app/(website)/project/_components/project-card";
 import { Task } from "@/shared/lib/types/task";
 import { getNameInitials } from "@/shared/lib/utils/getNameInitial";
 import CalenderIcon from "../../../../../../../public/icons/calender.svg";

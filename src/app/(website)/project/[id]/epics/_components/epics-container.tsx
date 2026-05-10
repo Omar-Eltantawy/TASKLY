@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useEffect, useState } from "react";
 import EpicCard from "./epic-card";
 import EpicCardSkeleton from "./epic-card-skeleton";
-import ProjectError from "@/app/(statistics)/project/_components/project-error";
+import ProjectError from "@/app/(website)/project/_components/project-error";
 import NoEpics from "./no-epics";
 import Image from "next/image";
 import Button from "@/shared/ui/button";

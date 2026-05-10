@@ -5,7 +5,7 @@ import Select, {
 } from "react-select";
 import { Task, TaskStatus } from "@/shared/lib/types/task";
 import { ProjectMember } from "@/shared/lib/types/project";
-import { formatDate } from "@/app/(statistics)/project/_components/project-card";
+import { formatDate } from "@/app/(website)/project/_components/project-card";
 import { OptionAvatar } from "./option-avatar";
 import selectStyles from "./select-styles";
 import { getNameInitials } from "@/shared/lib/utils/getNameInitial";

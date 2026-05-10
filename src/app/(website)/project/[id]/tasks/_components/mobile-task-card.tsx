@@ -1,7 +1,7 @@
 import { Task } from "@/shared/lib/types/task";
 import actionIcon from "../../../../../../../public/icons/action.svg";
 import Image from "next/image";
-import { formatDate } from "@/app/(statistics)/project/_components/project-card";
+import { formatDate } from "@/app/(website)/project/_components/project-card";
 import { cn } from "@/shared/lib/utils/tailwind-merge";
 import { COLUMN_COLORS, STATUS_LABELS } from "@/shared/lib/constants/constants";
 import { getNameInitials } from "@/shared/lib/utils/getNameInitial";

@@ -6,7 +6,7 @@ import creatorIcon from "../../../../../../../public/icons/creator.svg";
 import calenderIcon from "../../../../../../../public/icons/calender.svg";
 import Image from "next/image";
 import { getNameInitials } from "@/shared/lib/utils/getNameInitial";
-import { formatDate } from "@/app/(statistics)/project/_components/project-card";
+import { formatDate } from "@/app/(website)/project/_components/project-card";
 import { cn } from "@/shared/lib/utils/tailwind-merge";
 
 export default function EpicCard({

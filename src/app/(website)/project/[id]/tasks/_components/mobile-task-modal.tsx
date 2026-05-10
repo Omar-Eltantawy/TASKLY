@@ -12,7 +12,7 @@ import {
   TASK_STATUSES,
 } from "@/shared/lib/constants/constants";
 import { getNameInitials } from "@/shared/lib/utils/getNameInitial";
-import { formatDate } from "@/app/(statistics)/project/_components/project-card";
+import { formatDate } from "@/app/(website)/project/_components/project-card";
 type TaskDetailsProps = {
   task: Task | null;
   loading: boolean;

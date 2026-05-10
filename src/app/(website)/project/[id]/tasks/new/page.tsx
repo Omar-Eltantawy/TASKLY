@@ -1,4 +1,4 @@
-import ProjectError from "@/app/(statistics)/project/_components/project-error";
+import ProjectError from "@/app/(website)/project/_components/project-error";
 import { getEpicsAction } from "@/shared/lib/actions/get-epics.action";
 import { getProjectMembersAction } from "@/shared/lib/actions/get-project-members.action";
 import AddTaskForm from "./_components/add-task-form";
