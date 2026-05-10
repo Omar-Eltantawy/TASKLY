@@ -12,6 +12,10 @@ export default function Breadcrumbs() {
     (state) => state.activeProject,
   );
 
+  if (pathname === "/" || pathname === "/project") {
+    return null;
+  }
+
   const allPaths = pathname.split("/").filter(Boolean);
   const startIndex = allPaths.indexOf("project");
   const paths = startIndex !== -1 ? allPaths.slice(startIndex) : allPaths;

@@ -106,7 +106,7 @@ export default function Sidebar({ isOpen, onClose }: Props) {
             );
           })}
           {projectLinks.map((link) => {
-            const isActive = pathname === link.href;
+            const isActive = pathname.startsWith(link.href.split("?")[0]);
             return (
               <Link
                 key={link.href}
