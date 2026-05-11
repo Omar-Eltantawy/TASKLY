@@ -5,6 +5,7 @@ import { useAppDispatch } from "@/store/hooks";
 import { openTaskModal } from "@/store/features/ui/slice";
 import { useGetTasks } from "../_hooks/use-get-tasks";
 import MobileTasksSkeleton from "./mobile-tasks-skeleton";
+import NoTasks from "./no-tasks";
 
 export default function MobileTasks({
   projectId,
@@ -20,6 +21,8 @@ export default function MobileTasks({
   });
 
   if (loading) return <MobileTasksSkeleton />;
+
+  if (!tasks.length) return <NoTasks />;
 
   if (error)
     return (

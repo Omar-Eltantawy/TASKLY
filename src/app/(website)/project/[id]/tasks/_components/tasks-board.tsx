@@ -10,6 +10,7 @@ import BoardColumn from "./board-column";
 import BoardTaskCard from "./board-task-card";
 import { Toast } from "@/shared/ui/toast";
 import { useTasksBoard } from "../_hooks/use-tasks-board";
+import NoTasks from "./no-tasks";
 
 export default function TasksBoard({
   projectId,
@@ -30,6 +31,10 @@ export default function TasksBoard({
     handleDragEnd,
   } = useTasksBoard(projectId, searchTerm);
 
+  const isBoardEmpty =
+    !loading &&
+    TASK_STATUSES.every((status) => (tasksMap[status]?.length ?? 0) === 0);
+
   return (
     <>
       <DndContext
@@ -38,21 +43,41 @@ export default function TasksBoard({
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className="flex gap-4 h-full overflow-auto pb-4">
-          {TASK_STATUSES.map((status) => (
-            <BoardColumn
-              key={status}
-              projectId={projectId}
-              status={status}
-              label={STATUS_LABELS[status]}
-              tasks={tasksMap[status]}
-              loading={loading}
-              onTaskClick={(taskId) =>
-                dispatch(openTaskModal({ taskId, projectId }))
-              }
-            />
-          ))}
-        </div>
+        {loading ? (
+          <div className="flex gap-4 h-full overflow-auto pb-4">
+            {TASK_STATUSES.map((status) => (
+              <BoardColumn
+                key={status}
+                projectId={projectId}
+                status={status}
+                label={STATUS_LABELS[status]}
+                tasks={[]}
+                loading={true}
+                onTaskClick={() => {}}
+              />
+            ))}
+          </div>
+        ) : isBoardEmpty ? (
+          <div className="flex-1 flex items-center justify-center">
+            <NoTasks buttonWidth="w-1/2" />
+          </div>
+        ) : (
+          <div className="flex gap-4 h-full overflow-auto pb-4">
+            {TASK_STATUSES.map((status) => (
+              <BoardColumn
+                key={status}
+                projectId={projectId}
+                status={status}
+                label={STATUS_LABELS[status]}
+                tasks={tasksMap[status]}
+                loading={false}
+                onTaskClick={(taskId) =>
+                  dispatch(openTaskModal({ taskId, projectId }))
+                }
+              />
+            ))}
+          </div>
+        )}
 
         <DragOverlay>
           {activeTask && (

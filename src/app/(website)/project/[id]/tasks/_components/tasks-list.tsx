@@ -5,6 +5,7 @@ import Pagination from "@/shared/ui/pagination";
 import { useGetTasks } from "../_hooks/use-get-tasks";
 import { useRouter, useSearchParams } from "next/navigation";
 import TasksListSkeleton from "./tasks-list-skeleton";
+import NoTasks from "./no-tasks";
 
 export default function TasksList({
   projectId,
@@ -30,6 +31,12 @@ export default function TasksList({
 
     router.replace(`?${params.toString()}`, { scroll: false });
   };
+  {
+    /* Empty state */
+  }
+  {
+    if (!loading && !error && tasks.length === 0) return <NoTasks />;
+  }
 
   return (
     <div className="bg-white shadow-[0_4px_24px_0_#041B3C0A]">
@@ -57,13 +64,6 @@ export default function TasksList({
 
       {/* Error */}
       {error && <p className="text-center py-6 text-sm text-error">{error}</p>}
-
-      {/* Empty state */}
-      {!loading && !error && tasks.length === 0 && (
-        <p className="text-center py-6 text-sm text-slate-medium">
-          No tasks found.
-        </p>
-      )}
 
       {/* Tasks */}
       {!loading &&
