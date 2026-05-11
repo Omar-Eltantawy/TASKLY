@@ -47,7 +47,7 @@ export default function SignupForm() {
   return (
     <form
       onSubmit={form.handleSubmit(onSubmit)}
-      className="w-full sm:w-1/2 lg:w-[35%] p-12 bg-white shadow-[0_48px_24px_0_#041B3C0F]"
+      className="w-[90%] sm:w-1/2 lg:w-[35%] p-12 bg-white shadow-[0_48px_24px_0_#041B3C0F]"
     >
       {/* Heading */}
       <div className="text-left md:text-center mb-10">
