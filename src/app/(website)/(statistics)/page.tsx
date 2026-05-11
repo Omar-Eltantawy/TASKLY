@@ -3,11 +3,11 @@ import { getCurrentWeekRange } from "@/shared/lib/utils/date";
 import { getTasksPerProjectAction } from "@/shared/lib/actions/get-tasks-per-project.action";
 import { getProjectsAction } from "@/shared/lib/actions/get-projects.action";
 import { getCalendarStatsAction } from "@/shared/lib/actions/get-calender-stats.action";
-// import StatsFilters from "./_components/stats-filters";
-// import KpiCards from "./_components/kpi-cards";
-// import WeeklyCalendar from "./_components/weekly-calendar";
-// import StatusDoughnut from "./_components/status-doughnut";
-// import ProjectsBreakdown from "./_components/projects-breakdown";
+import StatsFilters from "./_components/stats-filters";
+import KpiCards from "./_components/kpi-cards";
+import WeeklyCalendar from "./_components/weekly-calendar";
+import StatusDoughnut from "./_components/status-doughnut";
+import ProjectsBreakdown from "./_components/projects-breakdown";
 
 export default async function MyStatisticsPage({
   searchParams,
@@ -44,7 +44,7 @@ export default async function MyStatisticsPage({
     : [];
 
   return (
-    <div className="h-full flex flex-col overflow-hidden">
+    <div className="h-full flex flex-col overflow-y-auto min-h-0 pb-20 md:pb-12 lg:pb-3">
       {/* Header */}
       <div className="mb-6 shrink-0">
         <h1 className="text-[2.3rem] font-semibold">Weekly Planner</h1>
@@ -55,41 +55,37 @@ export default async function MyStatisticsPage({
 
       {/* Filters */}
       <Suspense>
-        {/* <StatsFilters
+        <StatsFilters
           projects={allProjects}
           defaultStartDate={startDate}
           defaultEndDate={endDate}
           defaultProjectId={projectId}
           defaultStatus={status}
-        /> */}
+        />
       </Suspense>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto min-h-0 flex flex-col gap-6 pb-6">
-        {!stats ? (
-          <p className="text-error text-sm text-center py-10">
-            Failed to load statistics. Please try again.
-          </p>
-        ) : (
-          <>
-            {/* KPI Cards */}
-            {/* <KpiCards
-              totalTasks={stats.total_tasks}
-              doneTasks={stats.done_tasks}
-              overdueTasks={stats.overdue_tasks}
-            /> */}
+      {!stats ? (
+        <p className="text-error text-sm text-center py-10">
+          Failed to load statistics. Please try again.
+        </p>
+      ) : (
+        <>
+          {/* KPI Cards */}
+          <KpiCards
+            totalTasks={stats.total_tasks}
+            doneTasks={stats.done_tasks}
+            overdueTasks={stats.overdue_tasks}
+          />
 
-            {/* Calendar + Doughnut */}
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6">
-              {/* <WeeklyCalendar daily={stats.daily} />
-              <StatusDoughnut totals={stats.totals} /> */}
-            </div>
-
-            {/* Projects breakdown */}
-            {/* <ProjectsBreakdown projects={projectsStats} /> */}
-          </>
-        )}
-      </div>
+          {/* Calendar + Doughnut */}
+          <WeeklyCalendar daily={stats.daily} />
+          <div className="grid grid-cols-1 md:grid-cols-2  gap-6 my-3">
+            <StatusDoughnut totals={stats.totals} />
+            <ProjectsBreakdown projects={projectsStats} />
+          </div>
+        </>
+      )}
     </div>
   );
 }
