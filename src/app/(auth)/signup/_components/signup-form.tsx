@@ -64,6 +64,7 @@ export default function SignupForm() {
         name="Name"
         render={({ field }) => (
           <Input
+            className="w-full"
             label="Name"
             placeholder="Enter Your full name"
             error={form.formState.errors.Name}
@@ -78,6 +79,7 @@ export default function SignupForm() {
         name="Email"
         render={({ field }) => (
           <Input
+            className="w-full"
             label="Email"
             placeholder="yourname@company.com"
             error={form.formState.errors.Email}
@@ -86,12 +88,13 @@ export default function SignupForm() {
         )}
       />
 
-      {/* Name Input */}
+      {/* Job Input */}
       <Controller
         control={form.control}
         name="JobTitle"
         render={({ field }) => (
           <Input
+            className="w-full"
             label="Job Title"
             placeholder="e.g. Project manager"
             error={form.formState.errors.JobTitle}
@@ -107,6 +110,7 @@ export default function SignupForm() {
           name="Password"
           render={({ field }) => (
             <Input
+              className="w-full"
               type="password"
               label="Password"
               placeholder="Minimum 8 characters"
@@ -121,6 +125,7 @@ export default function SignupForm() {
           name="ConfirmPassword"
           render={({ field }) => (
             <Input
+              className="w-full"
               type="password"
               label="Confirm password"
               placeholder="Repeat your password"

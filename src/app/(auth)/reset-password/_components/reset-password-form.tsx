@@ -79,6 +79,7 @@ export default function ResetPasswordForm() {
         name="Password"
         render={({ field }) => (
           <Input
+            className="w-full"
             type="password"
             label="New Password"
             placeholder="Minimum 8 characters"
@@ -92,6 +93,7 @@ export default function ResetPasswordForm() {
         name="ConfirmPassword"
         render={({ field }) => (
           <Input
+            className="w-full"
             type="password"
             label="Confirm Password"
             placeholder="Minimum 8 characters"

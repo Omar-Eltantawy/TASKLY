@@ -70,6 +70,7 @@ export default function ForgotPasswordForm() {
         name="Email"
         render={({ field }) => (
           <Input
+            className="w-full"
             label="Email address"
             placeholder="yourname@company.com"
             error={form.formState.errors.Email}
